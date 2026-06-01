@@ -208,7 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              userData['email'] ?? 'Loading...',
+              userData[PrefsHelper.keyUserEmail] ?? 'Loading...',
               style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
@@ -216,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Last Login: ${userData['lastLogin'] != null && userData['lastLogin'].isNotEmpty ? userData['lastLogin'].substring(0, 16).replaceAll('T', ' ') : '-'}',
+              'Last Login: ${userData[PrefsHelper.keyLastLoginTime] != null && userData[PrefsHelper.keyLastLoginTime].isNotEmpty ? userData[PrefsHelper.keyLastLoginTime].substring(0, 16).replaceAll('T', ' ') : '-'}',
               style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,

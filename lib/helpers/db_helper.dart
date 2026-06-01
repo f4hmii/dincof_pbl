@@ -144,7 +144,7 @@ class DBHelper {
     return db;
   }
 
-  // Route 1: Insert Coffee
+  // Route 1: Menyisipkan data kopi baru ke dalam tabel 'coffees'.
   Future<int> insertCoffee(Coffee coffee) async {
     final db = await database;
     return await db.insert(
@@ -162,7 +162,7 @@ class DBHelper {
     );
   }
 
-  // Route 2: Get All Coffees
+  // Route 2: Mengambil semua data kopi dari tabel 'coffees'.
   Future<List<Coffee>> getAllCoffees() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('coffees');
@@ -179,7 +179,7 @@ class DBHelper {
     });
   }
 
-  // Route 3: Get Coffee By ID
+  // Route 3: Mengambil data kopi berdasarkan ID dari tabel 'coffees'.
   Future<Coffee?> getCoffeeById(String id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -201,7 +201,7 @@ class DBHelper {
     return null;
   }
 
-  // Route 4: Update Coffee
+  // Route 4: Memperbarui data kopi di dalam tabel 'coffees'.
   Future<int> updateCoffee(Coffee coffee) async {
     final db = await database;
     return await db.update(
@@ -219,7 +219,7 @@ class DBHelper {
     );
   }
 
-  // Route 5: Delete Coffee
+  // Route 5: Menghapus data kopi berdasarkan ID dari tabel 'coffees'.
   Future<int> deleteCoffee(String id) async {
     final db = await database;
     return await db.delete(
@@ -229,14 +229,14 @@ class DBHelper {
     );
   }
 
-  // Route 6: Count Coffees
+  // Route 6: Menghitung jumlah total data kopi di dalam tabel 'coffees'.
   Future<int> getCoffeeCount() async {
     final db = await database;
     final result = await db.rawQuery('SELECT COUNT(*) FROM coffees');
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
-  // Route 7: Get Coffees by Type
+  // Route 7: Mengambil data kopi berdasarkan jenisnya dari tabel 'coffees'.
   Future<List<Coffee>> getCoffeesByType(String type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -257,7 +257,7 @@ class DBHelper {
     });
   }
 
-  // Route 8: Get Top Rated Coffees
+  // Route 8: Mengambil data kopi dengan rating tertinggi dari tabel 'coffees'.
   Future<List<Coffee>> getTopRatedCoffees({int limit = 5}) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -278,7 +278,7 @@ class DBHelper {
     });
   }
 
-  // Route 9: Search Coffee by Name
+  // Route 9: Mencari data kopi berdasarkan nama di dalam tabel 'coffees'.
   Future<List<Coffee>> searchCoffeeByName(String name) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -299,7 +299,7 @@ class DBHelper {
     });
   }
 
-  // Route 10: Get Coffees within Price Range
+  // Route 10: Mengambil data kopi dalam rentang harga tertentu dari tabel 'coffees'.
   Future<List<Coffee>> getCoffeesByPriceRange(double minPrice, double maxPrice) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -320,7 +320,7 @@ class DBHelper {
     });
   }
 
-  // Route 11: Batch Insert Coffees
+  // Route 11: Menyisipkan beberapa data kopi sekaligus ke dalam tabel 'coffees'.
   Future<List<int>> batchInsertCoffees(List<Coffee> coffees) async {
     final db = await database;
     final batch = db.batch();
@@ -338,7 +338,7 @@ class DBHelper {
     return await batch.commit() as List<int>;
   }
 
-  // Route 12: Delete All Coffees
+  // Route 12: Menghapus semua data kopi dari tabel 'coffees'.
   Future<int> deleteAllCoffees() async {
     final db = await database;
     return await db.delete('coffees');

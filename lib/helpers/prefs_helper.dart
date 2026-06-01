@@ -1,40 +1,41 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Kunci untuk status login pengguna
 class PrefsHelper {
-  // Key-1: Login Status
+  // Key-1: Digunakan untuk menyimpan status login (true jika sudah login, false jika belum).
   static const String keyIsLoggedIn = 'isLoggedIn';
   
-  // Key-2: User Role
+  // Key-2: Digunakan untuk menyimpan peran pengguna (misalnya, 'admin' atau 'user').
   static const String keyUserRole = 'userRole';
   
-  // Key-3: Username
+  // Key-3: Digunakan untuk menyimpan nama pengguna yang sedang login.
   static const String keyUsername = 'username';
   
-  // Key-4: User Email
+  // Key-4: Digunakan untuk menyimpan alamat email pengguna yang sedang login.
   static const String keyUserEmail = 'userEmail';
   
-  // Key-5: Theme Mode
+  // Key-5: Digunakan untuk menyimpan mode tema aplikasi (misalnya, 'light' atau 'dark').
   static const String keyThemeMode = 'themeMode';
   
-  // Key-6: Last Login Time
+  // Key-6: Digunakan untuk menyimpan waktu terakhir kali pengguna login.
   static const String keyLastLoginTime = 'lastLoginTime';
   
-  // Key-7: Language Preference
+  // Key-7: Digunakan untuk menyimpan preferensi bahasa pengguna.
   static const String keyLanguage = 'language';
   
-  // Key-8: Notifications Enabled
+  // Key-8: Digunakan untuk menyimpan status notifikasi (true jika diaktifkan, false jika tidak).
   static const String keyNotificationsEnabled = 'notificationsEnabled';
   
-  // Bonus Key-9: App Version
+  // Key-9: Digunakan untuk menyimpan versi aplikasi saat ini.
   static const String keyAppVersion = 'appVersion';
   
-  // Bonus Key-10: Last Sync Time
+  // Key-10: Digunakan untuk menyimpan waktu terakhir sinkronisasi data.
   static const String keyLastSyncTime = 'lastSyncTime';
   
-  // Bonus Key-11: User ID
+  // Key-11: Digunakan untuk menyimpan ID unik pengguna.
   static const String keyUserId = 'userId';
   
-  // Bonus Key-12: Cart Total
+  // Key-12: Digunakan untuk menyimpan total belanja di keranjang.
   static const String keyCartTotal = 'cartTotal';
 
   static Future<void> saveLoginData(String username, String email, String role, {String? userId}) async {
