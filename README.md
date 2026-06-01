@@ -65,6 +65,23 @@ flutter run -d android
 flutter run -d chrome
 ```
 
+#### Menjalankan di Edge (Web)
+```bash
+flutter run -d edge
+```
+
+#### Menjalankan di Web dengan Port Spesifik
+Jika Anda ingin menjalankan aplikasi di web browser pada port tertentu secara langsung (misalnya port `8080`), gunakan perintah berikut:
+
+* **Chrome dengan Port 8080**:
+  ```bash
+  flutter run -d chrome --web-port 8080
+  ```
+* **Edge dengan Port 8080**:
+  ```bash
+  flutter run -d edge --web-port 8080
+  ```
+
 ---
 
 ## 📁 Struktur Dependensi Utama
