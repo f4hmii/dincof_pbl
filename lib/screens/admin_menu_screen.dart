@@ -12,9 +12,7 @@ class AdminMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Manage Menu'),
-      ),
+      appBar: AppBar(title: const Text('Manage Menu')),
       body: Consumer<AppProvider>(
         builder: (context, provider, child) {
           final coffees = provider.coffees;
@@ -32,28 +30,43 @@ class AdminMenuScreen extends StatelessWidget {
                   if (snapshot.hasData) {
                     return Container(
                       margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Theme.of(context).dividerColor),
+                        border: Border.all(
+                          color: Theme.of(context).dividerColor,
+                        ),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.coffee, color: Theme.of(context).colorScheme.primary),
+                          Icon(
+                            Icons.coffee,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           const SizedBox(width: 12),
                           Text(
                             'Total Kopi di Database:',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.color,
                             ),
                           ),
                           const Spacer(),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -97,22 +110,35 @@ class AdminMenuScreen extends StatelessWidget {
                             child: CoffeeImageWidget(
                               imagePath: coffee.imagePath,
                               fit: BoxFit.cover,
-                              fallbackWidget: const Icon(Icons.coffee, color: Colors.white, size: 30),
+                              fallbackWidget: const Icon(
+                                Icons.coffee,
+                                color: Colors.white,
+                                size: 30,
+                              ),
                             ),
                           ),
                         ),
-                        title: Text(coffee.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('${formatRupiah(coffee.price)} - ${coffee.type}'),
+                        title: Text(
+                          coffee.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          '${formatRupiah(coffee.price)} - ${coffee.type}',
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, color: Color(0xFF3B82F6)),
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Color(0xFF3B82F6),
+                              ),
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AdminMenuFormScreen(coffee: coffee),
+                                    builder: (context) =>
+                                        AdminMenuFormScreen(coffee: coffee),
                                   ),
                                 );
                               },
@@ -124,7 +150,9 @@ class AdminMenuScreen extends StatelessWidget {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: const Text('Delete Menu'),
-                                    content: const Text('Are you sure you want to delete this menu?'),
+                                    content: const Text(
+                                      'Are you sure you want to delete this menu?',
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
@@ -135,7 +163,10 @@ class AdminMenuScreen extends StatelessWidget {
                                           provider.deleteCoffee(coffee.id);
                                           Navigator.pop(context);
                                         },
-                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                        child: const Text(
+                                          'Delete',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -159,7 +190,9 @@ class AdminMenuScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AdminMenuFormScreen()),
+            MaterialPageRoute(
+              builder: (context) => const AdminMenuFormScreen(),
+            ),
           );
         },
       ),

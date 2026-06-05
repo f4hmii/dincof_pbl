@@ -27,7 +27,8 @@ class CoffeeImageWidget extends StatelessWidget {
     }
 
     // 1. Memuat gambar dari Network/URL
-    if (trimmedPath.startsWith('http://') || trimmedPath.startsWith('https://')) {
+    if (trimmedPath.startsWith('http://') ||
+        trimmedPath.startsWith('https://')) {
       return Image.network(
         trimmedPath,
         width: width,

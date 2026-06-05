@@ -10,17 +10,12 @@ class AdminUsersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Registered Users'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Registered Users'), centerTitle: true),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: Provider.of<AppProvider>(context, listen: false).getAllUsers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -51,7 +46,7 @@ class AdminUsersScreen extends StatelessWidget {
               final String email = user['email'] ?? 'No Email';
               final String role = user['role'] ?? 'user';
               final String id = user['id'] ?? 'N/A';
-              
+
               DateTime? regDate;
               if (user['createdAt'] != null) {
                 try {
@@ -80,8 +75,8 @@ class AdminUsersScreen extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundColor: isAdmin 
-                          ? Colors.blue.withOpacity(0.1) 
+                      backgroundColor: isAdmin
+                          ? Colors.blue.withOpacity(0.1)
                           : Colors.green.withOpacity(0.1),
                       child: Icon(
                         isAdmin ? Icons.admin_panel_settings : Icons.person,
@@ -109,10 +104,13 @@ class AdminUsersScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: isAdmin 
-                                      ? Colors.blue.withOpacity(0.1) 
+                                  color: isAdmin
+                                      ? Colors.blue.withOpacity(0.1)
                                       : Colors.green.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -132,18 +130,25 @@ class AdminUsersScreen extends StatelessWidget {
                             email,
                             style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context).textTheme.bodySmall?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.color,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Divider(color: Theme.of(context).dividerColor, height: 1),
+                          Divider(
+                            color: Theme.of(context).dividerColor,
+                            height: 1,
+                          ),
                           const SizedBox(height: 8),
                           Text(
                             'ID: $id',
                             style: TextStyle(
                               fontSize: 11,
                               fontFamily: 'monospace',
-                              color: Theme.of(context).textTheme.bodySmall?.color,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodySmall?.color,
                             ),
                           ),
                           if (regDate != null) ...[
@@ -152,7 +157,9 @@ class AdminUsersScreen extends StatelessWidget {
                               'Terdaftar: ${DateFormat('dd MMM yyyy, HH:mm').format(regDate)}',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: Theme.of(context).textTheme.bodySmall?.color,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.color,
                               ),
                             ),
                           ],

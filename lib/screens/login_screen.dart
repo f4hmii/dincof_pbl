@@ -31,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    // Validation
     if (email.isEmpty) {
       setState(() => _errorMessage = 'Email tidak boleh kosong');
       return;
@@ -54,15 +53,18 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       if (userData != null) {
-        // Save login data
         final username = userData['username'] as String? ?? 'User';
         final role = userData['role'] as String? ?? 'user';
         final userId = userData['id'] as String?;
         await PrefsHelper.saveLoginData(username, email, role, userId: userId);
         developer.log('✅ Login berhasil: $email');
-        
+
         if (role == 'admin') {
-          Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/admin',
+            (route) => false,
+          );
         } else {
           Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
         }
@@ -109,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 50),
-              // Error Message
+
               if (_errorMessage.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -123,9 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: const TextStyle(color: Colors.red, fontSize: 14),
                   ),
                 ),
-              if (_errorMessage.isNotEmpty)
-                const SizedBox(height: 20),
-              // Email Field
+              if (_errorMessage.isNotEmpty) const SizedBox(height: 20),
+
               TextFormField(
                 controller: _emailController,
                 enabled: !_isLoading,
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Password Field
+
               TextFormField(
                 controller: _passwordController,
                 enabled: !_isLoading,
@@ -171,7 +172,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
-                  suffixIcon: const Icon(Icons.visibility_off, color: AppColors.textSecondary),
+                  suffixIcon: const Icon(
+                    Icons.visibility_off,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -186,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              // Login Button
+
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleLogin,
                 style: ElevatedButton.styleFrom(
@@ -203,7 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(
@@ -224,9 +230,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: AppColors.textSecondary),
                   ),
                   TextButton(
-                    onPressed: _isLoading ? null : () {
-                      Navigator.pushNamed(context, '/register');
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            Navigator.pushNamed(context, '/register');
+                          },
                     child: const Text(
                       'Register',
                       style: TextStyle(
@@ -238,67 +246,82 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              // Demo Login Button
+
               TextButton(
-                onPressed: _isLoading ? null : () {
-                  final pwdController = TextEditingController();
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        title: const Text(
-                          'Sandi Admin Diperlukan',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        content: TextField(
-                          controller: pwdController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Masukkan Sandi',
-                            hintText: 'Sandi admin',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Batal'),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        final pwdController = TextEditingController();
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(16),
                               ),
-                            ),
-                            onPressed: () async {
-                              if (pwdController.text == 'admin123') {
-                                Navigator.pop(context);
-                                await PrefsHelper.saveLoginData('Admin', 'admin@dincoff.com', 'admin');
-                                if (mounted) {
-                                  Navigator.pushNamedAndRemoveUntil(context, '/admin', (route) => false);
-                                }
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Sandi admin salah!'),
-                                    backgroundColor: Colors.red,
+                              title: const Text(
+                                'Sandi Admin Diperlukan',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              content: TextField(
+                                controller: pwdController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Masukkan Sandi',
+                                  hintText: 'Sandi admin',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                );
-                              }
-                            },
-                            child: const Text('Masuk', style: TextStyle(color: Colors.white)),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Batal'),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    if (pwdController.text == 'admin123') {
+                                      Navigator.pop(context);
+                                      await PrefsHelper.saveLoginData(
+                                        'Admin',
+                                        'admin@dincoff.com',
+                                        'admin',
+                                      );
+                                      if (mounted) {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                          context,
+                                          '/admin',
+                                          (route) => false,
+                                        );
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Sandi admin salah!'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Masuk',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                 child: const Text(
                   'Login as Admin (Demo)',
                   style: TextStyle(

@@ -17,7 +17,7 @@ class AdminMenuFormScreen extends StatefulWidget {
 
 class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late TextEditingController _nameController;
   late TextEditingController _typeController;
   late TextEditingController _descriptionController;
@@ -29,10 +29,16 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
     super.initState();
     _nameController = TextEditingController(text: widget.coffee?.name ?? '');
     _typeController = TextEditingController(text: widget.coffee?.type ?? '');
-    _descriptionController = TextEditingController(text: widget.coffee?.description ?? '');
-    _priceController = TextEditingController(text: widget.coffee?.price.toString() ?? '');
-    _imageController = TextEditingController(text: widget.coffee?.imagePath ?? '');
-    
+    _descriptionController = TextEditingController(
+      text: widget.coffee?.description ?? '',
+    );
+    _priceController = TextEditingController(
+      text: widget.coffee?.price.toString() ?? '',
+    );
+    _imageController = TextEditingController(
+      text: widget.coffee?.imagePath ?? '',
+    );
+
     // Listener untuk memperbarui preview gambar secara langsung saat URL/path berubah
     _imageController.addListener(() {
       setState(() {});
@@ -52,7 +58,9 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
   void _saveForm() {
     if (_formKey.currentState!.validate()) {
       final coffee = Coffee(
-        id: widget.coffee?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        id:
+            widget.coffee?.id ??
+            DateTime.now().millisecondsSinceEpoch.toString(),
         name: _nameController.text,
         type: _typeController.text,
         description: _descriptionController.text,
@@ -88,9 +96,9 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
     } catch (e) {
       debugPrint('Error picking file: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal memilih gambar: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Gagal memilih gambar: $e')));
       }
     }
   }
@@ -112,11 +120,15 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
               const SizedBox(height: 16),
               _buildTextField('Type (e.g. with Oat Milk)', _typeController),
               const SizedBox(height: 16),
-              _buildTextField('Description', _descriptionController, maxLines: 3),
+              _buildTextField(
+                'Description',
+                _descriptionController,
+                maxLines: 3,
+              ),
               const SizedBox(height: 16),
               _buildTextField('Price', _priceController, isNumber: true),
               const SizedBox(height: 16),
-              // Image Preview
+
               Center(
                 child: Container(
                   width: 120,
@@ -151,11 +163,15 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: _buildTextField('Image URL / Path', _imageController),
+                    child: _buildTextField(
+                      'Image URL / Path',
+                      _imageController,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   SizedBox(
-                    height: 56, // Menyesuaikan tinggi dengan TextFormField default
+                    height:
+                        56, // Menyesuaikan tinggi dengan TextFormField default
                     child: ElevatedButton.icon(
                       onPressed: _pickImage,
                       icon: const Icon(Icons.folder_open, size: 20),
@@ -199,16 +215,21 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isNumber = false, int maxLines = 1}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool isNumber = false,
+    int maxLines = 1,
+  }) {
     return TextFormField(
       controller: controller,
-      keyboardType: isNumber ? const TextInputType.numberWithOptions(decimal: true) : TextInputType.text,
+      keyboardType: isNumber
+          ? const TextInputType.numberWithOptions(decimal: true)
+          : TextInputType.text,
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
         filled: true,
         fillColor: Theme.of(context).cardColor,
       ),

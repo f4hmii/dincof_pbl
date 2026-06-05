@@ -15,10 +15,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Cart'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Cart'), centerTitle: true),
       body: Consumer<AppProvider>(
         builder: (context, provider, child) {
           if (provider.cart.isEmpty) {
@@ -63,7 +60,11 @@ class CartScreen extends StatelessWidget {
                               child: CoffeeImageWidget(
                                 imagePath: item.coffee.imagePath,
                                 fit: BoxFit.cover,
-                                fallbackWidget: const Icon(Icons.coffee, color: Colors.white, size: 30),
+                                fallbackWidget: const Icon(
+                                  Icons.coffee,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -101,15 +102,26 @@ class CartScreen extends StatelessWidget {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: () => provider.updateQuantity(item, item.quantity - 1),
+                                onTap: () => provider.updateQuantity(
+                                  item,
+                                  item.quantity - 1,
+                                ),
                                 child: Container(
                                   width: 28,
                                   height: 28,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.lightGray),
+                                    border: Border.all(
+                                      color: AppColors.lightGray,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.remove, size: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
+                                  child: Icon(
+                                    Icons.remove,
+                                    size: 16,
+                                    color: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.color,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -122,7 +134,10 @@ class CartScreen extends StatelessWidget {
                               ),
                               const SizedBox(width: 12),
                               GestureDetector(
-                                onTap: () => provider.updateQuantity(item, item.quantity + 1),
+                                onTap: () => provider.updateQuantity(
+                                  item,
+                                  item.quantity + 1,
+                                ),
                                 child: Container(
                                   width: 28,
                                   height: 28,
@@ -130,7 +145,11 @@ class CartScreen extends StatelessWidget {
                                     color: AppColors.primary,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.add, size: 16, color: AppColors.white),
+                                  child: const Icon(
+                                    Icons.add,
+                                    size: 16,
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -186,20 +205,22 @@ class CartScreen extends StatelessWidget {
                       height: 56,
                       child: ElevatedButton(
                         onPressed: () async {
-                          // Check if user is logged in
                           final userData = await PrefsHelper.getUserData();
                           final isLoggedIn = userData['isLoggedIn'] as bool;
 
                           if (!isLoggedIn) {
-                            // Show dialog before redirecting to login
                             if (!context.mounted) return;
-                            
+
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
                                 title: const Text('Login Required'),
-                                content: const Text('You need to login first to proceed with checkout.'),
+                                content: const Text(
+                                  'You need to login first to proceed with checkout.',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),
@@ -211,14 +232,18 @@ class CartScreen extends StatelessWidget {
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const LoginScreen(),
+                                          builder: (context) =>
+                                              const LoginScreen(),
                                         ),
                                       );
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primary,
                                     ),
-                                    child: const Text('Login', style: TextStyle(color: AppColors.white)),
+                                    child: const Text(
+                                      'Login',
+                                      style: TextStyle(color: AppColors.white),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -226,7 +251,6 @@ class CartScreen extends StatelessWidget {
                             return;
                           }
 
-                          // User is logged in, proceed to checkout
                           if (!context.mounted) return;
                           Navigator.push(
                             context,

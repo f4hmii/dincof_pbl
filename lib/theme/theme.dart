@@ -52,10 +52,9 @@ class AppTheme {
         brightness: Brightness.dark,
         background: const Color(0xFF121212),
       ),
-      textTheme: GoogleFonts.soraTextTheme(ThemeData.dark().textTheme).apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
-      ),
+      textTheme: GoogleFonts.soraTextTheme(
+        ThemeData.dark().textTheme,
+      ).apply(bodyColor: Colors.white, displayColor: Colors.white),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xFF1E1E1E),
         elevation: 0,

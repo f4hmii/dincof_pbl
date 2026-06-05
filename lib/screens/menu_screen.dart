@@ -13,7 +13,6 @@ class MenuScreen extends StatelessWidget {
 
   const MenuScreen({super.key, required this.orderType});
 
-  // Get gradient colors based on coffee type
   LinearGradient getCoffeeGradient(String coffeeName) {
     switch (coffeeName.toLowerCase()) {
       case 'cappuccino':
@@ -54,9 +53,7 @@ class MenuScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(
-          orderType == 'delivery' ? 'Delivery Menu' : 'Pick-Up Menu',
-        ),
+        title: Text(orderType == 'delivery' ? 'Delivery Menu' : 'Pick-Up Menu'),
       ),
       body: Stack(
         children: [
@@ -65,7 +62,10 @@ class MenuScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FutureBuilder<int>(
-                  future: Provider.of<AppProvider>(context, listen: false).getCoffeeCount(),
+                  future: Provider.of<AppProvider>(
+                    context,
+                    listen: false,
+                  ).getCoffeeCount(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox.shrink();
@@ -73,28 +73,43 @@ class MenuScreen extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Container(
                         margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Theme.of(context).dividerColor),
+                          border: Border.all(
+                            color: Theme.of(context).dividerColor,
+                          ),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.coffee, color: Theme.of(context).colorScheme.primary),
+                            Icon(
+                              Icons.coffee,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                             const SizedBox(width: 12),
                             Text(
                               'Total Kopi Tersedia:',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).textTheme.bodyLarge?.color,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
                               ),
                             ),
                             const Spacer(),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -134,10 +149,7 @@ class MenuScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const Text(
             'Lihat Semua',
@@ -157,7 +169,7 @@ class MenuScreen extends StatelessWidget {
       builder: (context, provider, child) {
         final coffees = provider.coffees;
         if (coffees.isEmpty) return const SizedBox.shrink();
-        
+
         return SizedBox(
           height: 230,
           child: ListView.builder(
@@ -191,7 +203,11 @@ class MenuScreen extends StatelessWidget {
             ),
             itemCount: coffees.length,
             itemBuilder: (context, index) {
-              return _buildCoffeeCard(context, coffees[index], isHorizontal: false);
+              return _buildCoffeeCard(
+                context,
+                coffees[index],
+                isHorizontal: false,
+              );
             },
           ),
         );
@@ -199,14 +215,16 @@ class MenuScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCoffeeCard(BuildContext context, Coffee coffee, {required bool isHorizontal}) {
+  Widget _buildCoffeeCard(
+    BuildContext context,
+    Coffee coffee, {
+    required bool isHorizontal,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(coffee: coffee),
-          ),
+          MaterialPageRoute(builder: (context) => DetailScreen(coffee: coffee)),
         );
       },
       child: Container(
@@ -281,14 +299,19 @@ class MenuScreen extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => _showSizeSelectionBottomSheet(context, coffee),
+                        onTap: () =>
+                            _showSizeSelectionBottomSheet(context, coffee),
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: const BoxDecoration(
                             color: AppColors.primary,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.add, color: AppColors.white, size: 16),
+                          child: const Icon(
+                            Icons.add,
+                            color: AppColors.white,
+                            size: 16,
+                          ),
                         ),
                       ),
                     ],
@@ -348,7 +371,10 @@ class MenuScreen extends StatelessWidget {
                         ],
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: AppColors.textSecondary),
+                        icon: const Icon(
+                          Icons.close,
+                          color: AppColors.textSecondary,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -356,10 +382,7 @@ class MenuScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Text(
                     'Pilih Ukuran',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -376,10 +399,14 @@ class MenuScreen extends StatelessWidget {
                           width: 90,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: isSelected ? AppColors.primary.withOpacity(0.1) : Theme.of(context).cardColor,
+                            color: isSelected
+                                ? AppColors.primary.withOpacity(0.1)
+                                : Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isSelected ? AppColors.primary : AppColors.lightGray,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : AppColors.lightGray,
                             ),
                           ),
                           alignment: Alignment.center,
@@ -387,8 +414,14 @@ class MenuScreen extends StatelessWidget {
                             size,
                             style: TextStyle(
                               fontSize: 14,
-                              color: isSelected ? AppColors.primary : Theme.of(context).textTheme.bodyLarge?.color,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.color,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                           ),
                         ),
@@ -430,7 +463,9 @@ class MenuScreen extends StatelessWidget {
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('${coffee.name} ($selectedSize) ditambahkan ke keranjang!'),
+                                  content: Text(
+                                    '${coffee.name} ($selectedSize) ditambahkan ke keranjang!',
+                                  ),
                                   backgroundColor: AppColors.primary,
                                   duration: const Duration(seconds: 1),
                                 ),

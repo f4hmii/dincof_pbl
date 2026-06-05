@@ -24,16 +24,17 @@ class DBHelper {
   }
 
   Future<Database> _initDB() async {
-    // Initialize FFI for Windows/Linux/Mac Desktop
-    if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    // Inisialisasi FFI untuk desktop Windows/Linux/macOS
+    if (!kIsWeb &&
+        (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
       developer.log('✅ SQLite FFI initialized for desktop platform');
     }
 
     String dbPath;
-    
-    // For Windows desktop, use a known location
+
+    // Untuk Windows desktop, gunakan lokasi penyimpanan yang diketahui
     if (Platform.isWindows) {
       final documentsPath = Platform.environment['USERPROFILE'] ?? '.';
       dbPath = join(documentsPath, 'Dincoff', 'dincoff.db');
@@ -42,11 +43,11 @@ class DBHelper {
       final path = await getDatabasesPath();
       dbPath = join(path, 'dincoff.db');
     }
-    
+
     developer.log('📁 Database directory: ${dirname(dbPath)}');
     developer.log('📁 Full database path: $dbPath');
-    
-    // Create directory if it doesn't exist
+
+    // Buat direktori jika belum ada
     final dir = Directory(dirname(dbPath));
     if (!dir.existsSync()) {
       try {
@@ -56,15 +57,16 @@ class DBHelper {
         developer.log('❌ Failed to create directory: $e');
       }
     }
-    
-    // Check if file exists
+
     final file = File(dbPath);
     if (await file.exists()) {
       developer.log('✅ Database file already exists');
     } else {
-      developer.log('⚠️ Database file does not exist yet, will be created on first open');
+      developer.log(
+        '⚠️ Database file does not exist yet, will be created on first open',
+      );
     }
-    
+
     final db = await openDatabase(
       dbPath,
       version: 3,
@@ -81,7 +83,7 @@ class DBHelper {
             rating REAL
           )
         ''');
-        
+
         await db.execute('''
           CREATE TABLE orders (
             id TEXT PRIMARY KEY,
@@ -93,7 +95,7 @@ class DBHelper {
             items TEXT
           )
         ''');
-        
+
         await db.execute('''
           CREATE TABLE cartItems (
             id TEXT PRIMARY KEY,
@@ -103,7 +105,7 @@ class DBHelper {
             FOREIGN KEY(coffeeId) REFERENCES coffees(id)
           )
         ''');
-        
+
         await db.execute('''
           CREATE TABLE users (
             id TEXT PRIMARY KEY,
@@ -139,30 +141,24 @@ class DBHelper {
         developer.log('✅ Database opened successfully');
       },
     );
-    
+
     developer.log('✅ Database initialized');
     return db;
   }
 
-  // Route 1: Menyisipkan data kopi baru ke dalam tabel 'coffees'.
   Future<int> insertCoffee(Coffee coffee) async {
     final db = await database;
-    return await db.insert(
-      'coffees',
-      {
-        'id': coffee.id,
-        'name': coffee.name,
-        'type': coffee.type,
-        'description': coffee.description,
-        'price': coffee.price,
-        'imagePath': coffee.imagePath,
-        'rating': coffee.rating,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    return await db.insert('coffees', {
+      'id': coffee.id,
+      'name': coffee.name,
+      'type': coffee.type,
+      'description': coffee.description,
+      'price': coffee.price,
+      'imagePath': coffee.imagePath,
+      'rating': coffee.rating,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // Route 2: Mengambil semua data kopi dari tabel 'coffees'.
   Future<List<Coffee>> getAllCoffees() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('coffees');
@@ -179,7 +175,6 @@ class DBHelper {
     });
   }
 
-  // Route 3: Mengambil data kopi berdasarkan ID dari tabel 'coffees'.
   Future<Coffee?> getCoffeeById(String id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -201,7 +196,6 @@ class DBHelper {
     return null;
   }
 
-  // Route 4: Memperbarui data kopi di dalam tabel 'coffees'.
   Future<int> updateCoffee(Coffee coffee) async {
     final db = await database;
     return await db.update(
@@ -219,24 +213,17 @@ class DBHelper {
     );
   }
 
-  // Route 5: Menghapus data kopi berdasarkan ID dari tabel 'coffees'.
   Future<int> deleteCoffee(String id) async {
     final db = await database;
-    return await db.delete(
-      'coffees',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('coffees', where: 'id = ?', whereArgs: [id]);
   }
 
-  // Route 6: Menghitung jumlah total data kopi di dalam tabel 'coffees'.
   Future<int> getCoffeeCount() async {
     final db = await database;
     final result = await db.rawQuery('SELECT COUNT(*) FROM coffees');
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
-  // Route 7: Mengambil data kopi berdasarkan jenisnya dari tabel 'coffees'.
   Future<List<Coffee>> getCoffeesByType(String type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -257,7 +244,6 @@ class DBHelper {
     });
   }
 
-  // Route 8: Mengambil data kopi dengan rating tertinggi dari tabel 'coffees'.
   Future<List<Coffee>> getTopRatedCoffees({int limit = 5}) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -278,7 +264,6 @@ class DBHelper {
     });
   }
 
-  // Route 9: Mencari data kopi berdasarkan nama di dalam tabel 'coffees'.
   Future<List<Coffee>> searchCoffeeByName(String name) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -299,8 +284,10 @@ class DBHelper {
     });
   }
 
-  // Route 10: Mengambil data kopi dalam rentang harga tertentu dari tabel 'coffees'.
-  Future<List<Coffee>> getCoffeesByPriceRange(double minPrice, double maxPrice) async {
+  Future<List<Coffee>> getCoffeesByPriceRange(
+    double minPrice,
+    double maxPrice,
+  ) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'coffees',
@@ -320,7 +307,6 @@ class DBHelper {
     });
   }
 
-  // Route 11: Menyisipkan beberapa data kopi sekaligus ke dalam tabel 'coffees'.
   Future<List<int>> batchInsertCoffees(List<Coffee> coffees) async {
     final db = await database;
     final batch = db.batch();
@@ -338,32 +324,23 @@ class DBHelper {
     return await batch.commit() as List<int>;
   }
 
-  // Route 12: Menghapus semua data kopi dari tabel 'coffees'.
   Future<int> deleteAllCoffees() async {
     final db = await database;
     return await db.delete('coffees');
   }
 
-  // ========== USER FUNCTIONS ==========
-
-  // Insert User (Register)
   Future<int> insertUser(String username, String email, String password) async {
     final db = await database;
-    return await db.insert(
-      'users',
-      {
-        'id': DateTime.now().millisecondsSinceEpoch.toString(),
-        'username': username,
-        'email': email,
-        'password': password,
-        'role': 'user',
-        'createdAt': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.ignore,
-    );
+    return await db.insert('users', {
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'username': username,
+      'email': email,
+      'password': password,
+      'role': 'user',
+      'createdAt': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
-  // Get User by Email
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     final db = await database;
     final result = await db.query(
@@ -377,45 +354,33 @@ class DBHelper {
     return null;
   }
 
-  // Get User by ID
   Future<Map<String, dynamic>?> getUserById(String id) async {
     final db = await database;
-    final result = await db.query(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final result = await db.query('users', where: 'id = ?', whereArgs: [id]);
     if (result.isNotEmpty) {
       return result.first;
     }
     return null;
   }
 
-  // Get All Users
   Future<List<Map<String, dynamic>>> getAllUsers() async {
     final db = await database;
     return await db.query('users');
   }
 
-  // Delete User
   Future<int> deleteUser(String id) async {
     final db = await database;
     return await db.delete('users', where: 'id = ?', whereArgs: [id]);
   }
 
-  // Check if email exists
   Future<bool> emailExists(String email) async {
     final user = await getUserByEmail(email);
     return user != null;
   }
 
-  // ========== ORDER FUNCTIONS ==========
-
-  // Insert Order
   Future<int> insertOrder(Order order, String userId) async {
     final db = await database;
-    
-    // Serialize items to JSON
+
     final List<Map<String, dynamic>> itemsJson = order.items.map((item) {
       return {
         'coffeeId': item.coffee.id,
@@ -428,29 +393,27 @@ class DBHelper {
         'quantity': item.quantity,
       };
     }).toList();
-    
+
     final itemsString = jsonEncode(itemsJson);
 
-    return await db.insert(
-      'orders',
-      {
-        'id': order.id,
-        'userId': userId,
-        'totalPrice': order.total,
-        'status': order.status,
-        'createdAt': order.date.toIso8601String(),
-        'updatedAt': DateTime.now().toIso8601String(),
-        'items': itemsString,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    return await db.insert('orders', {
+      'id': order.id,
+      'userId': userId,
+      'totalPrice': order.total,
+      'status': order.status,
+      'createdAt': order.date.toIso8601String(),
+      'updatedAt': DateTime.now().toIso8601String(),
+      'items': itemsString,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // Get All Orders
   Future<List<Order>> getAllOrders() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('orders', orderBy: 'createdAt DESC');
-    
+    final List<Map<String, dynamic>> maps = await db.query(
+      'orders',
+      orderBy: 'createdAt DESC',
+    );
+
     List<Order> orders = [];
     for (var map in maps) {
       final itemsString = map['items'] as String?;
@@ -472,20 +435,21 @@ class DBHelper {
           );
         }).toList();
       }
-      
-      orders.add(Order(
-        id: map['id'],
-        items: items,
-        total: (map['totalPrice'] as num).toDouble(),
-        date: DateTime.parse(map['createdAt']),
-        status: map['status'],
-        userId: map['userId'] as String?,
-      ));
+
+      orders.add(
+        Order(
+          id: map['id'],
+          items: items,
+          total: (map['totalPrice'] as num).toDouble(),
+          date: DateTime.parse(map['createdAt']),
+          status: map['status'],
+          userId: map['userId'] as String?,
+        ),
+      );
     }
     return orders;
   }
 
-  // Get Orders by User ID
   Future<List<Order>> getOrdersByUserId(String userId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -494,7 +458,7 @@ class DBHelper {
       whereArgs: [userId],
       orderBy: 'createdAt DESC',
     );
-    
+
     List<Order> orders = [];
     for (var map in maps) {
       final itemsString = map['items'] as String?;
@@ -516,70 +480,56 @@ class DBHelper {
           );
         }).toList();
       }
-      
-      orders.add(Order(
-        id: map['id'],
-        items: items,
-        total: (map['totalPrice'] as num).toDouble(),
-        date: DateTime.parse(map['createdAt']),
-        status: map['status'],
-        userId: map['userId'] as String?,
-      ));
+
+      orders.add(
+        Order(
+          id: map['id'],
+          items: items,
+          total: (map['totalPrice'] as num).toDouble(),
+          date: DateTime.parse(map['createdAt']),
+          status: map['status'],
+          userId: map['userId'] as String?,
+        ),
+      );
     }
     return orders;
   }
 
-  // Update Order Status
   Future<int> updateOrderStatus(String orderId, String status) async {
     final db = await database;
     return await db.update(
       'orders',
-      {
-        'status': status,
-        'updatedAt': DateTime.now().toIso8601String(),
-      },
+      {'status': status, 'updatedAt': DateTime.now().toIso8601String()},
       where: 'id = ?',
       whereArgs: [orderId],
     );
   }
 
-  // ========== CART FUNCTIONS ==========
-
-  // Insert or Update Cart Item
   Future<int> insertOrUpdateCartItem(String coffeeId, int quantity) async {
     final db = await database;
-    return await db.insert(
-      'cartItems',
-      {
-        'id': coffeeId,
-        'coffeeId': coffeeId,
-        'quantity': quantity,
-        'addedAt': DateTime.now().toIso8601String(),
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    return await db.insert('cartItems', {
+      'id': coffeeId,
+      'coffeeId': coffeeId,
+      'quantity': quantity,
+      'addedAt': DateTime.now().toIso8601String(),
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // Get All Cart Items
   Future<List<CartItem>> getAllCartItems() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query('cartItems');
-    
+
     List<CartItem> items = [];
     for (var map in maps) {
       final coffeeId = map['coffeeId'] as String;
       final coffee = await getCoffeeById(coffeeId);
       if (coffee != null) {
-        items.add(CartItem(
-          coffee: coffee,
-          quantity: map['quantity'] as int,
-        ));
+        items.add(CartItem(coffee: coffee, quantity: map['quantity'] as int));
       }
     }
     return items;
   }
 
-  // Delete Cart Item
   Future<int> deleteCartItem(String coffeeId) async {
     final db = await database;
     return await db.delete(
@@ -589,7 +539,6 @@ class DBHelper {
     );
   }
 
-  // Clear Cart
   Future<int> deleteAllCartItems() async {
     final db = await database;
     return await db.delete('cartItems');

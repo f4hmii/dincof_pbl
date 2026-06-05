@@ -13,19 +13,14 @@ class OrdersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('My Orders'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('My Orders'), centerTitle: true),
       body: Consumer<AppProvider>(
         builder: (context, provider, child) {
           return FutureBuilder<List<Order>>(
             future: provider.getUserOrders(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
               final orders = snapshot.data ?? [];
@@ -33,7 +28,10 @@ class OrdersScreen extends StatelessWidget {
                 return const Center(
                   child: Text(
                     'You have no recent orders',
-                    style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 );
               }
@@ -71,7 +69,10 @@ class OrdersScreen extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
@@ -99,22 +100,28 @@ class OrdersScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Divider(color: Theme.of(context).dividerColor),
                         ),
-                        ...order.items.map((item) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                '${item.quantity}x',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(item.coffee.name),
-                              ),
-                              Text(formatRupiah(item.coffee.price * item.quantity)),
-                            ],
+                        ...order.items.map(
+                          (item) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '${item.quantity}x',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(child: Text(item.coffee.name)),
+                                Text(
+                                  formatRupiah(
+                                    item.coffee.price * item.quantity,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
+                        ),
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +134,7 @@ class OrdersScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              formatRupiah(order.total + 15000.0), // Total + Delivery
+                              formatRupiah(order.total + 15000.0),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,

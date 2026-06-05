@@ -26,32 +26,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
       'id': 'wallet',
       'name': 'Dincoff Wallet',
       'icon': Icons.account_balance_wallet,
-      'balance': 500000.0
+      'balance': 500000.0,
     },
     {
       'id': 'credit_card',
       'name': 'Credit Card',
       'icon': Icons.credit_card,
-      'balance': null
+      'balance': null,
     },
     {
       'id': 'bank_transfer',
       'name': 'Bank Transfer',
       'icon': Icons.account_balance,
-      'balance': null
+      'balance': null,
     },
     {
       'id': 'e_wallet',
       'name': 'E-Wallet (GCash/PayMaya)',
       'icon': Icons.mobile_screen_share,
-      'balance': null
+      'balance': null,
     },
   ];
 
   Future<void> _processPayment() async {
-    // Validate payment method
     if (_selectedPaymentMethod == 'credit_card') {
-      if (_cardNumber.isEmpty || _cardHolder.isEmpty || _expiryDate.isEmpty || _cvv.isEmpty) {
+      if (_cardNumber.isEmpty ||
+          _cardHolder.isEmpty ||
+          _expiryDate.isEmpty ||
+          _cvv.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please fill all card details')),
         );
@@ -61,23 +63,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     setState(() => _isProcessing = true);
 
-    // Simulate payment processing
     await Future.delayed(const Duration(seconds: 2));
 
-    // Save payment info to preferences
     await PrefsHelper.setCartTotal(0);
 
     if (!mounted) return;
 
     setState(() => _isProcessing = false);
 
-    // Show success dialog
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Icon(Icons.check_circle, color: Color(0xFF3B82F6), size: 56),
+        title: const Icon(
+          Icons.check_circle,
+          color: Color(0xFF3B82F6),
+          size: 56,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -96,7 +99,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             const SizedBox(height: 8),
             Text(
               'Method: ${_paymentMethods.firstWhere((m) => m['id'] == _selectedPaymentMethod)['name']}',
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -107,15 +113,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
             child: ElevatedButton(
               onPressed: () {
                 context.read<AppProvider>().checkout();
-                Navigator.pop(context); // Close dialog
-                Navigator.pop(context); // Close payment screen
-                Navigator.pop(context); // Close checkout screen
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Done', style: TextStyle(color: AppColors.white)),
+              child: const Text(
+                'Done',
+                style: TextStyle(color: AppColors.white),
+              ),
             ),
           ),
         ],
@@ -139,7 +150,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Amount Summary
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -166,7 +176,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 32),
 
-            // Payment Methods
             const Text(
               'Select Payment Method',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -174,7 +183,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             const SizedBox(height: 16),
             ..._paymentMethods.map((method) {
               return GestureDetector(
-                onTap: () => setState(() => _selectedPaymentMethod = method['id']),
+                onTap: () =>
+                    setState(() => _selectedPaymentMethod = method['id']),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
@@ -244,7 +254,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               );
             }).toList(),
 
-            // Card Details (if Credit Card selected)
             if (_selectedPaymentMethod == 'credit_card') ...[
               const SizedBox(height: 24),
               const Text(
@@ -257,7 +266,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 decoration: InputDecoration(
                   hintText: 'Card Number',
                   prefixIcon: const Icon(Icons.credit_card),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -266,7 +277,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 decoration: InputDecoration(
                   hintText: 'Cardholder Name',
                   prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -277,7 +290,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       onChanged: (value) => _expiryDate = value,
                       decoration: InputDecoration(
                         hintText: 'MM/YY',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -287,7 +302,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       onChanged: (value) => _cvv = value,
                       decoration: InputDecoration(
                         hintText: 'CVV',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
@@ -297,7 +314,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             const SizedBox(height: 32),
 
-            // Payment Terms
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -313,7 +329,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             const SizedBox(height: 24),
 
-            // Process Payment Button
             SizedBox(
               width: double.infinity,
               height: 56,
@@ -321,7 +336,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 onPressed: _isProcessing ? null : _processPayment,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   disabledBackgroundColor: AppColors.lightGray,
                 ),
                 child: _isProcessing
@@ -329,7 +346,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         height: 24,
                         width: 24,
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.white,
+                          ),
                         ),
                       )
                     : const Text(

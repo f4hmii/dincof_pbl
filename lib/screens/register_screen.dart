@@ -36,7 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    // Validation
     if (name.isEmpty) {
       setState(() => _errorMessage = 'Nama lengkap tidak boleh kosong');
       return;
@@ -66,7 +65,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       final provider = context.read<AppProvider>();
-      final registerSuccess = await provider.registerUser(name, email, password);
+      final registerSuccess = await provider.registerUser(
+        name,
+        email,
+        password,
+      );
 
       if (!mounted) return;
 
@@ -80,7 +83,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
         Navigator.pop(context);
       } else {
-        setState(() => _errorMessage = 'Email sudah terdaftar atau registrasi gagal');
+        setState(
+          () => _errorMessage = 'Email sudah terdaftar atau registrasi gagal',
+        );
       }
     } catch (e) {
       developer.log('❌ Register error: $e', error: e);
@@ -109,10 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const Center(
                 child: Text(
                   'Create an Account',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 10),
@@ -127,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              // Error Message
+
               if (_errorMessage.isNotEmpty) ...[
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -143,13 +145,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
               ],
-              _buildTextField(context, 'Full Name', _nameController, enabled: !_isLoading),
+              _buildTextField(
+                context,
+                'Full Name',
+                _nameController,
+                enabled: !_isLoading,
+              ),
               const SizedBox(height: 20),
-              _buildTextField(context, 'Email', _emailController, enabled: !_isLoading),
+              _buildTextField(
+                context,
+                'Email',
+                _emailController,
+                enabled: !_isLoading,
+              ),
               const SizedBox(height: 20),
-              _buildTextField(context, 'Password', _passwordController, obscure: true, enabled: !_isLoading),
+              _buildTextField(
+                context,
+                'Password',
+                _passwordController,
+                obscure: true,
+                enabled: !_isLoading,
+              ),
               const SizedBox(height: 20),
-              _buildTextField(context, 'Confirm Password', _confirmPasswordController, obscure: true, enabled: !_isLoading),
+              _buildTextField(
+                context,
+                'Confirm Password',
+                _confirmPasswordController,
+                obscure: true,
+                enabled: !_isLoading,
+              ),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleRegister,
@@ -167,7 +191,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(
@@ -188,9 +214,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(color: AppColors.textSecondary),
                   ),
                   TextButton(
-                    onPressed: _isLoading ? null : () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            Navigator.pop(context);
+                          },
                     child: const Text(
                       'Login',
                       style: TextStyle(
@@ -208,7 +236,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTextField(BuildContext context, String label, TextEditingController controller, {bool obscure = false, bool enabled = true}) {
+  Widget _buildTextField(
+    BuildContext context,
+    String label,
+    TextEditingController controller, {
+    bool obscure = false,
+    bool enabled = true,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: obscure,

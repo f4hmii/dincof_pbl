@@ -26,10 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final packageInfo = await PackageInfo.fromPlatform();
     final appVersion = packageInfo.version;
     setState(() {
-      userData = {
-        ...data,
-        PrefsHelper.keyAppVersion: appVersion,
-      };
+      userData = {...data, PrefsHelper.keyAppVersion: appVersion};
       isLoading = false;
     });
   }
@@ -40,10 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-          centerTitle: true,
-        ),
+        appBar: AppBar(title: const Text('Profile'), centerTitle: true),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -67,9 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: const Center(child: CircularProgressIndicator()),
                     ),
                     Positioned(
                       bottom: 0,
@@ -81,7 +73,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Theme.of(context).colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.edit, color: Colors.white, size: 16),
+                        child: const Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ],
@@ -90,10 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Loading...',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
               Text(
@@ -111,19 +104,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!isLoggedIn) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-          centerTitle: true,
-        ),
+        appBar: AppBar(title: const Text('Profile'), centerTitle: true),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.person_off, size: 80, color: Theme.of(context).textTheme.bodySmall?.color),
+              Icon(
+                Icons.person_off,
+                size: 80,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
               const SizedBox(height: 20),
               Text(
                 'You must login to view your profile',
-                style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodySmall?.color),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
+                ),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
@@ -132,10 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 child: const Text(
                   'Login Now',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -145,10 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Profile'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -186,7 +177,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.edit, color: Colors.white, size: 16),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 16,
+                      ),
                     ),
                   ),
                 ],
@@ -195,10 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
             Text(
               userData['username'] ?? 'Loading...',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -238,11 +230,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () async {
                 await PrefsHelper.logout();
                 if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
                 }
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 20,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.red.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
@@ -284,13 +283,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ),
-          Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).textTheme.bodySmall?.color),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: Theme.of(context).textTheme.bodySmall?.color,
+          ),
         ],
       ),
     );
@@ -308,10 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: SwitchListTile(
         title: const Text(
           'Dark Mode',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         value: Provider.of<AppProvider>(context).themeMode == ThemeMode.dark,
         onChanged: (value) {

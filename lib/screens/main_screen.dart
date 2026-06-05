@@ -30,10 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _pages),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
@@ -47,13 +44,24 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(Icons.home_filled, Icons.home_outlined, 0),
-                _buildNavItem(Icons.receipt_long, Icons.receipt_long_outlined, 1),
-                _buildNavItem(Icons.shopping_bag, Icons.shopping_bag_outlined, 2),
+                _buildNavItem(
+                  Icons.receipt_long,
+                  Icons.receipt_long_outlined,
+                  1,
+                ),
+                _buildNavItem(
+                  Icons.shopping_bag,
+                  Icons.shopping_bag_outlined,
+                  2,
+                ),
                 _buildNavItem(Icons.person, Icons.person_outline, 3),
               ],
             ),

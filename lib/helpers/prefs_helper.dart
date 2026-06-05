@@ -3,43 +3,36 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Kunci untuk status login pengguna
 class PrefsHelper {
-  // Key-1: Digunakan untuk menyimpan status login (true jika sudah login, false jika belum).
   static const String keyIsLoggedIn = 'isLoggedIn';
-  
-  // Key-2: Digunakan untuk menyimpan peran pengguna (misalnya, 'admin' atau 'user').
+
   static const String keyUserRole = 'userRole';
-  
-  // Key-3: Digunakan untuk menyimpan nama pengguna yang sedang login.
+
   static const String keyUsername = 'username';
-  
-  // Key-4: Digunakan untuk menyimpan alamat email pengguna yang sedang login.
+
   static const String keyUserEmail = 'userEmail';
-  
-  // Key-5: Digunakan untuk menyimpan mode tema aplikasi (misalnya, 'light' atau 'dark').
+
   static const String keyThemeMode = 'themeMode';
-  
-  // Key-6: Digunakan untuk menyimpan waktu terakhir kali pengguna login.
+
   static const String keyLastLoginTime = 'lastLoginTime';
-  
-  // Key-7: Digunakan untuk menyimpan preferensi bahasa pengguna.
+
   static const String keyLanguage = 'language';
-  
-  // Key-8: Digunakan untuk menyimpan status notifikasi (true jika diaktifkan, false jika tidak).
+
   static const String keyNotificationsEnabled = 'notificationsEnabled';
-  
-  // Key-9: Digunakan untuk menyimpan versi aplikasi saat ini.
+
   static const String keyAppVersion = 'appVersion';
-  
-  // Key-10: Digunakan untuk menyimpan waktu terakhir sinkronisasi data.
+
   static const String keyLastSyncTime = 'lastSyncTime';
-  
-  // Key-11: Digunakan untuk menyimpan ID unik pengguna.
+
   static const String keyUserId = 'userId';
-  
-  // Key-12: Digunakan untuk menyimpan total belanja di keranjang.
+
   static const String keyCartTotal = 'cartTotal';
 
-  static Future<void> saveLoginData(String username, String email, String role, {String? userId}) async {
+  static Future<void> saveLoginData(
+    String username,
+    String email,
+    String role, {
+    String? userId,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(keyIsLoggedIn, true);
     await prefs.setString(keyUserRole, role);
@@ -49,8 +42,8 @@ class PrefsHelper {
     if (userId != null) {
       await prefs.setString(keyUserId, userId);
     }
-    
-    // Set default values if not exists
+
+    // Set nilai default jika belum ada
     if (!prefs.containsKey(keyThemeMode)) {
       await prefs.setString(keyThemeMode, 'light');
     }
@@ -101,8 +94,6 @@ class PrefsHelper {
       orElse: () => ThemeMode.system,
     );
   }
-
-  // Preferences Methods for New Keys
 
   static Future<void> setLanguage(String language) async {
     final prefs = await SharedPreferences.getInstance();

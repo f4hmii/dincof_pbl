@@ -54,14 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-
   @override
   void dispose() {
     _heroSlideTimer.cancel();
     _heroPageController.dispose();
     super.dispose();
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -72,137 +71,133 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Hero Image Slider
-                SizedBox(
-                  height: 230,
-                  child: PageView.builder(
-                    controller: _heroPageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentHeroPage = index;
-                      });
-                    },
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(16),
-                          bottomRight: Radius.circular(16),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(heroImages[index]),
-                              fit: BoxFit.cover,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    SizedBox(
+                      height: 230,
+                      child: PageView.builder(
+                        controller: _heroPageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentHeroPage = index;
+                          });
+                        },
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          return ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16),
+                              bottomRight: Radius.circular(16),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(heroImages[index]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: 10,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          3,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: _currentHeroPage == index ? 28 : 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: _currentHeroPage == index
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Colors.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: -50,
+                      left: 20,
+                      right: 20,
+                      child: _buildMemberCard(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 65),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Buat Pesanan Sekarang',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                // Hero Image Indicators
-                Positioned(
-                  bottom: 10,
-                  left: 0,
-                  right: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      3,
-                      (index) => Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentHeroPage == index ? 28 : 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                            color: _currentHeroPage == index
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.white.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(4),
+                _buildOrderOptions(),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Paket Bundle',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'Lebih hemat, lebih nikmat! Temukan perpaduan sempurna kopi favorit dan snack pilihan untuk menemani harimu.',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(height: 1.4),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
                         ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        'lib/assets_img/bundling/bundling.png',
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-
-                // Member Card overlapping boundary
-                Positioned(
-                  bottom: -50,
-                  left: 20,
-                  right: 20,
-                  child: _buildMemberCard(),
-                ),
+                const SizedBox(height: 100),
               ],
             ),
-            const SizedBox(height: 65),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Buat Pesanan Sekarang',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-            _buildOrderOptions(),
-            const SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Paket Bundle',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Text(
-                'Lebih hemat, lebih nikmat! Temukan perpaduan sempurna kopi favorit dan snack pilihan untuk menemani harimu.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      height: 1.4,
-                    ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 15,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.asset(
-                    'lib/assets_img/bundling/bundling.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 100),
-          ],
-        ),
-      ),
-          // Floating Cart Widget
+          ),
+
           const FloatingCartWidget(),
         ],
       ),
     );
   }
-
-
 
   Widget _buildMemberCard() {
     return Container(
@@ -232,7 +227,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.amber.withOpacity(0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.star, color: Colors.amber, size: 16),
+                    child: const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 16,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Column(
@@ -240,13 +239,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const Text(
                         '150 Pts',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       Text(
                         'Member',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontSize: 11,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(fontSize: 11),
                       ),
                     ],
                   ),
@@ -324,14 +326,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildOptionCard({required IconData icon, required String title, required Color color, required String type}) {
+  Widget _buildOptionCard({
+    required IconData icon,
+    required String title,
+    required Color color,
+    required String type,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => MenuScreen(orderType: type),
-          ),
+          MaterialPageRoute(builder: (context) => MenuScreen(orderType: type)),
         );
       },
       child: Container(
@@ -358,9 +363,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -370,11 +375,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
-
-
-
-
-
 }

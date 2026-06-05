@@ -13,9 +13,7 @@ class AdminOrdersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Manage Orders'),
-      ),
+      appBar: AppBar(title: const Text('Manage Orders')),
       body: Consumer<AppProvider>(
         builder: (context, provider, child) {
           final orders = provider.orders;
@@ -42,15 +40,22 @@ class AdminOrdersScreen extends StatelessWidget {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: order.status == 'Payment Confirmed' ? const Color(0xFF3B82F6).withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+                              color: order.status == 'Payment Confirmed'
+                                  ? const Color(0xFF3B82F6).withOpacity(0.1)
+                                  : Colors.orange.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               order.status,
                               style: TextStyle(
-                                color: order.status == 'Payment Confirmed' ? const Color(0xFF3B82F6) : Colors.orange,
+                                color: order.status == 'Payment Confirmed'
+                                    ? const Color(0xFF3B82F6)
+                                    : Colors.orange,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -65,21 +70,29 @@ class AdminOrdersScreen extends StatelessWidget {
                         builder: (context, snapshot) {
                           final user = snapshot.data;
                           final displayId = order.userId ?? 'N/A';
-                          final displayUser = user != null ? '${user['username']} (${user['email']})' : 'Unknown / Guest';
+                          final displayUser = user != null
+                              ? '${user['username']} (${user['email']})'
+                              : 'Unknown / Guest';
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  const Icon(Icons.person_outline, size: 14, color: Colors.grey),
+                                  const Icon(
+                                    Icons.person_outline,
+                                    size: 14,
+                                    color: Colors.grey,
+                                  ),
                                   const SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
                                       'ID Pelanggan: $displayId',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Theme.of(context).textTheme.bodySmall?.color,
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodySmall?.color,
                                       ),
                                     ),
                                   ),
@@ -87,14 +100,20 @@ class AdminOrdersScreen extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  const Icon(Icons.account_circle_outlined, size: 14, color: Colors.grey),
+                                  const Icon(
+                                    Icons.account_circle_outlined,
+                                    size: 14,
+                                    color: Colors.grey,
+                                  ),
                                   const SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
                                       'Pelanggan: $displayUser',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Theme.of(context).textTheme.bodySmall?.color,
+                                        color: Theme.of(
+                                          context,
+                                        ).textTheme.bodySmall?.color,
                                       ),
                                     ),
                                   ),
@@ -105,22 +124,32 @@ class AdminOrdersScreen extends StatelessWidget {
                         },
                       ),
                       const Divider(),
-                      ...order.items.map((item) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('${item.quantity}x ${item.coffee.name}'),
-                            Text(formatRupiah(item.coffee.price * item.quantity)),
-                          ],
+                      ...order.items.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('${item.quantity}x ${item.coffee.name}'),
+                              Text(
+                                formatRupiah(item.coffee.price * item.quantity),
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                       const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Total:', style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text(formatRupiah(order.total + 15000.0), style: const TextStyle(fontWeight: FontWeight.bold)),
+                          const Text(
+                            'Total:',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            formatRupiah(order.total + 15000.0),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -131,13 +160,18 @@ class AdminOrdersScreen extends StatelessWidget {
                             onPressed: () {
                               provider.confirmOrderPayment(order.id);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Payment confirmed!')),
+                                const SnackBar(
+                                  content: Text('Payment confirmed!'),
+                                ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF3B82F6),
                             ),
-                            child: const Text('Confirm Payment', style: TextStyle(color: AppColors.white)),
+                            child: const Text(
+                              'Confirm Payment',
+                              style: TextStyle(color: AppColors.white),
+                            ),
                           ),
                         ),
                     ],

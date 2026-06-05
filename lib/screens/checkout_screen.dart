@@ -28,10 +28,7 @@ class CheckoutScreen extends StatelessWidget {
               children: [
                 const Text(
                   'Delivery Address',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 Container(
@@ -67,7 +64,10 @@ class CheckoutScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(color: AppColors.lightGray),
                           borderRadius: BorderRadius.circular(20),
@@ -83,10 +83,7 @@ class CheckoutScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 const Text(
                   'Payment Method',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 Container(
@@ -103,7 +100,10 @@ class CheckoutScreen extends StatelessWidget {
                           color: AppColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.account_balance_wallet, color: AppColors.primary),
+                        child: const Icon(
+                          Icons.account_balance_wallet,
+                          color: AppColors.primary,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       const Expanded(
@@ -135,14 +135,27 @@ class CheckoutScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildSummaryRow(context, 'Price', formatRupiah(provider.cartTotal)),
+                      _buildSummaryRow(
+                        context,
+                        'Price',
+                        formatRupiah(provider.cartTotal),
+                      ),
                       const SizedBox(height: 12),
-                      _buildSummaryRow(context, 'Delivery Fee', formatRupiah(15000.0)),
+                      _buildSummaryRow(
+                        context,
+                        'Delivery Fee',
+                        formatRupiah(15000.0),
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: Divider(color: Theme.of(context).dividerColor),
                       ),
-                      _buildSummaryRow(context, 'Total Payment', formatRupiah(provider.cartTotal + 15000.0), isTotal: true),
+                      _buildSummaryRow(
+                        context,
+                        'Total Payment',
+                        formatRupiah(provider.cartTotal + 15000.0),
+                        isTotal: true,
+                      ),
                     ],
                   ),
                 ),
@@ -173,7 +186,7 @@ class CheckoutScreen extends StatelessWidget {
               height: 56,
               child: ElevatedButton(
                 onPressed: () {
-                  final total = provider.cartTotal + 15000.0; // Add delivery fee
+                  final total = provider.cartTotal + 15000.0;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -204,7 +217,12 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryRow(BuildContext context, String label, String value, {bool isTotal = false}) {
+  Widget _buildSummaryRow(
+    BuildContext context,
+    String label,
+    String value, {
+    bool isTotal = false,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -213,7 +231,9 @@ class CheckoutScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? Theme.of(context).textTheme.bodyLarge?.color : AppColors.textSecondary,
+            color: isTotal
+                ? Theme.of(context).textTheme.bodyLarge?.color
+                : AppColors.textSecondary,
           ),
         ),
         Text(

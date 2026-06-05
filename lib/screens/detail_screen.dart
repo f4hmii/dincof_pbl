@@ -18,7 +18,6 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   String selectedSize = 'M';
 
-  // Get gradient colors based on coffee type
   LinearGradient getCoffeeGradient(String coffeeName) {
     switch (coffeeName.toLowerCase()) {
       case 'cappuccino':
@@ -65,10 +64,7 @@ class _DetailScreenState extends State<DetailScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
         ],
       ),
       body: SafeArea(
@@ -178,10 +174,14 @@ class _DetailScreenState extends State<DetailScreen> {
                             width: 100,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primary.withOpacity(0.1) : Theme.of(context).cardColor,
+                              color: isSelected
+                                  ? AppColors.primary.withOpacity(0.1)
+                                  : Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isSelected ? AppColors.primary : AppColors.lightGray,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : AppColors.lightGray,
                               ),
                             ),
                             alignment: Alignment.center,
@@ -189,8 +189,14 @@ class _DetailScreenState extends State<DetailScreen> {
                               size,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: isSelected ? AppColors.primary : Theme.of(context).textTheme.bodyLarge?.color,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                color: isSelected
+                                    ? AppColors.primary
+                                    : Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.color,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                               ),
                             ),
                           ),
@@ -250,7 +256,9 @@ class _DetailScreenState extends State<DetailScreen> {
                         context.read<AppProvider>().addToCart(widget.coffee);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('${widget.coffee.name} added to cart!'),
+                            content: Text(
+                              '${widget.coffee.name} added to cart!',
+                            ),
                             backgroundColor: AppColors.primary,
                             duration: const Duration(seconds: 2),
                           ),

@@ -19,7 +19,7 @@ class AdminDashboard extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/login');
             },
-          )
+          ),
         ],
       ),
       body: Padding(
@@ -35,7 +35,9 @@ class AdminDashboard extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AdminMenuScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AdminMenuScreen(),
+                  ),
                 );
               },
             ),
@@ -48,7 +50,9 @@ class AdminDashboard extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AdminOrdersScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AdminOrdersScreen(),
+                  ),
                 );
               },
             ),
@@ -61,7 +65,9 @@ class AdminDashboard extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AdminUsersScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const AdminUsersScreen(),
+                  ),
                 );
               },
             ),
@@ -71,7 +77,13 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildAdminCard(BuildContext context, {required String title, required IconData icon, required Color color, required VoidCallback onTap}) {
+  Widget _buildAdminCard(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

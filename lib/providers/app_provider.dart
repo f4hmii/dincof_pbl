@@ -31,8 +31,9 @@ class AppProvider extends ChangeNotifier {
   }
 
   Future<void> toggleTheme() async {
-    _themeMode =
-        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode = _themeMode == ThemeMode.light
+        ? ThemeMode.dark
+        : ThemeMode.light;
     await PrefsHelper.setTheme(_themeMode);
     notifyListeners();
   }
@@ -81,7 +82,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   List<CartItem> get cart => _cart;
-  List<Order> get orders => _orders; // All orders (for admin) and user orders
+  List<Order> get orders => _orders;
   List<Coffee> get coffees => _coffees;
 
   // Mengambil daftar pesanan khusus untuk pengguna yang sedang login
@@ -106,7 +107,10 @@ class AppProvider extends ChangeNotifier {
   }
 
   double get cartTotal {
-    return _cart.fold(0, (sum, item) => sum + (item.coffee.price * item.quantity));
+    return _cart.fold(
+      0,
+      (sum, item) => sum + (item.coffee.price * item.quantity),
+    );
   }
 
   Future<void> addToCart(Coffee coffee) async {
@@ -146,7 +150,7 @@ class AppProvider extends ChangeNotifier {
     if (newQuantity > 0) {
       item.quantity = newQuantity;
       notifyListeners();
-      
+
       if (!kIsWeb) {
         try {
           await _dbHelper.insertOrUpdateCartItem(item.coffee.id, newQuantity);
@@ -201,8 +205,6 @@ class AppProvider extends ChangeNotifier {
     await clearCart();
   }
 
-  // --- ADMIN FUNCTIONS ---
-
   Future<void> addCoffee(Coffee coffee) async {
     if (!kIsWeb) {
       try {
@@ -242,7 +244,6 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Menghitung jumlah total produk kopi yang tersedia
   Future<int> getCoffeeCount() async {
     if (kIsWeb) {
       return _coffees.length;
@@ -255,7 +256,6 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
-  // Mengambil daftar semua pengguna terdaftar
   Future<List<Map<String, dynamic>>> getAllUsers() async {
     if (kIsWeb) {
       return [
@@ -272,7 +272,7 @@ class AppProvider extends ChangeNotifier {
           'email': 'user@dincoff.com',
           'role': 'user',
           'createdAt': DateTime.now().toIso8601String(),
-        }
+        },
       ];
     }
     try {
@@ -283,11 +283,12 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
-  // ========== LOGIN & REGISTER FUNCTIONS ==========
-
-  Future<bool> registerUser(String username, String email, String password) async {
+  Future<bool> registerUser(
+    String username,
+    String email,
+    String password,
+  ) async {
     try {
-      // Check if email exists
       if (kIsWeb) {
         developer.log('Web Platform: Email validation skipped');
         return true;
@@ -299,7 +300,6 @@ class AppProvider extends ChangeNotifier {
         return false;
       }
 
-      // Insert user to database
       final result = await _dbHelper.insertUser(username, email, password);
       developer.log('✅ User registered successfully: $email');
       return result > 0;
@@ -311,7 +311,6 @@ class AppProvider extends ChangeNotifier {
 
   Future<Map<String, dynamic>?> loginUser(String email, String password) async {
     try {
-      // Admin credential check
       if (email == 'admin@dincoff.com') {
         if (password == 'admin123') {
           developer.log('✅ Admin authenticated: $email');
@@ -337,14 +336,12 @@ class AppProvider extends ChangeNotifier {
         };
       }
 
-      // Get user from database
       final user = await _dbHelper.getUserByEmail(email);
       if (user == null) {
         developer.log('❌ Login failed: User not found - $email');
         return null;
       }
 
-      // Password validation
       final savedPassword = user['password'] as String?;
       if (savedPassword != password) {
         developer.log('❌ Login failed: Incorrect password for - $email');
@@ -362,7 +359,6 @@ class AppProvider extends ChangeNotifier {
   Future<void> confirmOrderPayment(String orderId) async {
     final index = _orders.indexWhere((o) => o.id == orderId);
     if (index != -1) {
-      // Create a new order object with updated status
       final oldOrder = _orders[index];
       _orders[index] = Order(
         id: oldOrder.id,
