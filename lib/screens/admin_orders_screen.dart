@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../theme/colors.dart';
 import '../providers/app_provider.dart';
 import '../helpers/currency_helper.dart';
+import '../helpers/db_helper.dart';
 
 class AdminOrdersScreen extends StatelessWidget {
   const AdminOrdersScreen({super.key});
@@ -11,7 +12,7 @@ class AdminOrdersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Manage Orders'),
       ),
@@ -59,6 +60,50 @@ class AdminOrdersScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(DateFormat('dd MMM yyyy, HH:mm').format(order.date)),
+                      FutureBuilder<Map<String, dynamic>?>(
+                        future: DBHelper().getUserById(order.userId ?? ''),
+                        builder: (context, snapshot) {
+                          final user = snapshot.data;
+                          final displayId = order.userId ?? 'N/A';
+                          final displayUser = user != null ? '${user['username']} (${user['email']})' : 'Unknown / Guest';
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Icon(Icons.person_outline, size: 14, color: Colors.grey),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      'ID Pelanggan: $displayId',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Theme.of(context).textTheme.bodySmall?.color,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.account_circle_outlined, size: 14, color: Colors.grey),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      'Pelanggan: $displayUser',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Theme.of(context).textTheme.bodySmall?.color,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                       const Divider(),
                       ...order.items.map((item) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),

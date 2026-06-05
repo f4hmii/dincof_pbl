@@ -112,7 +112,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
                   ),
                 ),
               ),
@@ -144,13 +143,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
               ],
-              _buildTextField('Full Name', _nameController, enabled: !_isLoading),
+              _buildTextField(context, 'Full Name', _nameController, enabled: !_isLoading),
               const SizedBox(height: 20),
-              _buildTextField('Email', _emailController, enabled: !_isLoading),
+              _buildTextField(context, 'Email', _emailController, enabled: !_isLoading),
               const SizedBox(height: 20),
-              _buildTextField('Password', _passwordController, obscure: true, enabled: !_isLoading),
+              _buildTextField(context, 'Password', _passwordController, obscure: true, enabled: !_isLoading),
               const SizedBox(height: 20),
-              _buildTextField('Confirm Password', _confirmPasswordController, obscure: true, enabled: !_isLoading),
+              _buildTextField(context, 'Confirm Password', _confirmPasswordController, obscure: true, enabled: !_isLoading),
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: _isLoading ? null : _handleRegister,
@@ -209,7 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool obscure = false, bool enabled = true}) {
+  Widget _buildTextField(BuildContext context, String label, TextEditingController controller, {bool obscure = false, bool enabled = true}) {
     return TextFormField(
       controller: controller,
       obscureText: obscure,
@@ -230,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderSide: const BorderSide(color: AppColors.primary),
         ),
         filled: true,
-        fillColor: AppColors.white,
+        fillColor: Theme.of(context).cardColor,
       ),
     );
   }

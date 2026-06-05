@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../theme/colors.dart';
+import 'package:provider/provider.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import '../providers/app_provider.dart';
 import '../helpers/prefs_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,8 +23,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserData() async {
     final data = await PrefsHelper.getUserData();
+    final packageInfo = await PackageInfo.fromPlatform();
+    final appVersion = packageInfo.version;
     setState(() {
-      userData = data;
+      userData = {
+        ...data,
+        PrefsHelper.keyAppVersion: appVersion,
+      };
       isLoading = false;
     });
   }
@@ -33,7 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text('Profile'),
           centerTitle: true,
@@ -51,11 +57,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.white.withOpacity(0.3),
-                        border: Border.all(color: AppColors.white, width: 4),
+                        color: Theme.of(context).cardColor.withOpacity(0.3),
+                        border: Border.all(color: Colors.white, width: 4),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.black.withOpacity(0.1),
+                            color: Colors.black.withOpacity(0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -71,11 +77,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Container(
                         width: 32,
                         height: 32,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.edit, color: AppColors.white, size: 16),
+                        child: const Icon(Icons.edit, color: Colors.white, size: 16),
                       ),
                     ),
                   ],
@@ -87,15 +93,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 userData['email'] ?? 'Loading...',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
               ),
             ],
@@ -106,7 +111,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!isLoggedIn) {
       return Scaffold(
-        backgroundColor: AppColors.background,
         appBar: AppBar(
           title: const Text('Profile'),
           centerTitle: true,
@@ -115,30 +119,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.person_off, size: 80, color: AppColors.textSecondary),
+              Icon(Icons.person_off, size: 80, color: Theme.of(context).textTheme.bodySmall?.color),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'You must login to view your profile',
-                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+                style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodySmall?.color),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
                 child: const Text(
                   'Login Now',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.white,
                   ),
                 ),
               ),
@@ -149,7 +145,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
@@ -171,10 +166,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         image: NetworkImage('https://i.pravatar.cc/150?img=11'),
                         fit: BoxFit.cover,
                       ),
-                      border: Border.all(color: AppColors.white, width: 4),
+                      border: Border.all(color: Colors.white, width: 4),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.black.withOpacity(0.1),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),
@@ -187,11 +182,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                       width: 32,
                       height: 32,
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.edit, color: AppColors.white, size: 16),
+                      child: const Icon(Icons.edit, color: Colors.white, size: 16),
                     ),
                   ),
                 ],
@@ -203,23 +198,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               userData[PrefsHelper.keyUserEmail] ?? 'Loading...',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Last Login: ${userData[PrefsHelper.keyLastLoginTime] != null && userData[PrefsHelper.keyLastLoginTime].isNotEmpty ? userData[PrefsHelper.keyLastLoginTime].substring(0, 16).replaceAll('T', ' ') : '-'}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'App Version: ${userData[PrefsHelper.keyAppVersion] ?? '-'}',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             const SizedBox(height: 40),
@@ -229,6 +231,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildProfileOption(Icons.notifications_outlined, 'Notifications'),
             _buildProfileOption(Icons.security_outlined, 'Security'),
             _buildProfileOption(Icons.help_outline, 'Help & Support'),
+            const SizedBox(height: 20),
+            _buildThemeSwitcher(context),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
@@ -270,12 +274,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.textPrimary),
+          Icon(icon),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
@@ -286,8 +290,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textSecondary),
+          Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).textTheme.bodySmall?.color),
         ],
+      ),
+    );
+  }
+
+  Widget _buildThemeSwitcher(BuildContext context) {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: SwitchListTile(
+        title: const Text(
+          'Dark Mode',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        value: Provider.of<AppProvider>(context).themeMode == ThemeMode.dark,
+        onChanged: (value) {
+          appProvider.toggleTheme();
+        },
+        secondary: const Icon(Icons.dark_mode_outlined),
+        activeColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

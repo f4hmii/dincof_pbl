@@ -14,7 +14,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Cart'),
         centerTitle: true,
@@ -42,7 +42,7 @@ class CartScreen extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 16.0),
                       padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(
@@ -109,7 +109,7 @@ class CartScreen extends StatelessWidget {
                                     border: Border.all(color: AppColors.lightGray),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.remove, size: 16, color: AppColors.textPrimary),
+                                  child: Icon(Icons.remove, size: 16, color: Theme.of(context).textTheme.bodyLarge?.color),
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -144,7 +144,7 @@ class CartScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: Theme.of(context).cardColor,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),

@@ -11,7 +11,7 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Checkout'),
         leading: IconButton(
@@ -37,7 +37,7 @@ class CheckoutScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -92,7 +92,7 @@ class CheckoutScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -130,19 +130,19 @@ class CheckoutScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
                     children: [
-                      _buildSummaryRow('Price', formatRupiah(provider.cartTotal)),
+                      _buildSummaryRow(context, 'Price', formatRupiah(provider.cartTotal)),
                       const SizedBox(height: 12),
-                      _buildSummaryRow('Delivery Fee', formatRupiah(15000.0)),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0),
-                        child: Divider(color: AppColors.lightGray),
+                      _buildSummaryRow(context, 'Delivery Fee', formatRupiah(15000.0)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Divider(color: Theme.of(context).dividerColor),
                       ),
-                      _buildSummaryRow('Total Payment', formatRupiah(provider.cartTotal + 15000.0), isTotal: true),
+                      _buildSummaryRow(context, 'Total Payment', formatRupiah(provider.cartTotal + 15000.0), isTotal: true),
                     ],
                   ),
                 ),
@@ -156,7 +156,7 @@ class CheckoutScreen extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(24.0),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
@@ -204,7 +204,7 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
+  Widget _buildSummaryRow(BuildContext context, String label, String value, {bool isTotal = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -213,7 +213,7 @@ class CheckoutScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal ? AppColors.textPrimary : AppColors.textSecondary,
+            color: isTotal ? Theme.of(context).textTheme.bodyLarge?.color : AppColors.textSecondary,
           ),
         ),
         Text(
@@ -221,7 +221,6 @@ class CheckoutScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
           ),
         ),
       ],

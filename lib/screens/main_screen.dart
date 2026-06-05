@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/colors.dart';
 import 'home_screen.dart';
 import 'orders_screen.dart';
 import 'cart_screen.dart';
@@ -37,10 +36,10 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -72,12 +71,16 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Icon(
           isSelected ? activeIcon : inactiveIcon,
-          color: isSelected ? AppColors.primary : AppColors.textSecondary,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).textTheme.bodySmall?.color,
           size: 28,
         ),
       ),

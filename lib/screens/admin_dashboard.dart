@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 import 'admin_menu_screen.dart';
 import 'admin_orders_screen.dart';
+import 'admin_users_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -51,6 +52,19 @@ class AdminDashboard extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 20),
+            _buildAdminCard(
+              context,
+              title: 'Registered Users',
+              icon: Icons.people,
+              color: Colors.green,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AdminUsersScreen()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -63,7 +77,7 @@ class AdminDashboard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -90,7 +104,6 @@ class AdminDashboard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
                 ),
               ),
             ),

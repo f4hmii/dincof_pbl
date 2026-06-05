@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Kunci untuk status login pengguna
@@ -73,12 +74,13 @@ class PrefsHelper {
 
   static Future<Map<String, dynamic>> getUserData() async {
     final prefs = await SharedPreferences.getInstance();
+    final themeMode = await getTheme();
     return {
       keyIsLoggedIn: prefs.getBool(keyIsLoggedIn) ?? false,
       keyUserRole: prefs.getString(keyUserRole) ?? '',
       keyUsername: prefs.getString(keyUsername) ?? '',
       keyUserEmail: prefs.getString(keyUserEmail) ?? '',
-      keyThemeMode: prefs.getString(keyThemeMode) ?? 'light',
+      keyThemeMode: themeMode.name,
       keyLastLoginTime: prefs.getString(keyLastLoginTime) ?? '',
       keyLanguage: prefs.getString(keyLanguage) ?? 'en',
       keyNotificationsEnabled: prefs.getBool(keyNotificationsEnabled) ?? true,
@@ -86,9 +88,18 @@ class PrefsHelper {
     };
   }
 
-  static Future<void> setThemeMode(String theme) async {
+  static Future<void> setTheme(ThemeMode themeMode) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(keyThemeMode, theme);
+    await prefs.setString(keyThemeMode, themeMode.name);
+  }
+
+  static Future<ThemeMode> getTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    final themeString = prefs.getString(keyThemeMode);
+    return ThemeMode.values.firstWhere(
+      (e) => e.name == themeString,
+      orElse: () => ThemeMode.system,
+    );
   }
 
   // Preferences Methods for New Keys

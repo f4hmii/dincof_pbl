@@ -31,6 +31,7 @@ class Order {
   final double total;
   final DateTime date;
   final String status;
+  final String? userId;
 
   Order({
     required this.id,
@@ -38,6 +39,7 @@ class Order {
     required this.total,
     required this.date,
     required this.status,
+    this.userId,
   });
 }
 

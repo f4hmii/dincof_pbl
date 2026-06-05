@@ -52,15 +52,11 @@ class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           orderType == 'delivery' ? 'Delivery Menu' : 'Pick-Up Menu',
-          style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: Stack(
         children: [
@@ -68,6 +64,54 @@ class MenuScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                FutureBuilder<int>(
+                  future: Provider.of<AppProvider>(context, listen: false).getCoffeeCount(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox.shrink();
+                    }
+                    if (snapshot.hasData) {
+                      return Container(
+                        margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Theme.of(context).dividerColor),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.coffee, color: Theme.of(context).colorScheme.primary),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Total Kopi Tersedia:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).textTheme.bodyLarge?.color,
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                '${snapshot.data}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
                 _buildSectionTitle('Rekomendasi Spesial'),
                 _buildHorizontalList(),
                 _buildSectionTitle('Menu Terfavorit'),
@@ -93,7 +137,6 @@ class MenuScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
             ),
           ),
           const Text(
@@ -170,7 +213,7 @@ class MenuScreen extends StatelessWidget {
         width: isHorizontal ? 160 : null,
         margin: isHorizontal ? const EdgeInsets.only(right: 16) : null,
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -212,7 +255,6 @@ class MenuScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -236,7 +278,6 @@ class MenuScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
                         ),
                       ),
                       GestureDetector(
@@ -272,9 +313,9 @@ class MenuScreen extends StatelessWidget {
           builder: (context, setState) {
             return Container(
               padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),
                 ),
@@ -294,7 +335,6 @@ class MenuScreen extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -319,7 +359,6 @@ class MenuScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -337,7 +376,7 @@ class MenuScreen extends StatelessWidget {
                           width: 90,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: isSelected ? AppColors.primary.withOpacity(0.1) : AppColors.white,
+                            color: isSelected ? AppColors.primary.withOpacity(0.1) : Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isSelected ? AppColors.primary : AppColors.lightGray,
@@ -348,7 +387,7 @@ class MenuScreen extends StatelessWidget {
                             size,
                             style: TextStyle(
                               fontSize: 14,
-                              color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                              color: isSelected ? AppColors.primary : Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             ),
                           ),

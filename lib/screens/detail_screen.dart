@@ -57,7 +57,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Detail'),
         leading: IconButton(
@@ -178,7 +178,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             width: 100,
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primary.withOpacity(0.1) : AppColors.white,
+                              color: isSelected ? AppColors.primary.withOpacity(0.1) : Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: isSelected ? AppColors.primary : AppColors.lightGray,
@@ -189,7 +189,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               size,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                                color: isSelected ? AppColors.primary : Theme.of(context).textTheme.bodyLarge?.color,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                               ),
                             ),
@@ -204,7 +204,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Container(
               padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),

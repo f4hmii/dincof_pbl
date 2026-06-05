@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../theme/colors.dart';
 import 'menu_screen.dart';
 import '../widgets/floating_cart.dart';
 
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -119,8 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: _currentHeroPage == index ? 28 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: _currentHeroPage == index
-                              ? AppColors.accent
+                            color: _currentHeroPage == index
+                              ? Theme.of(context).colorScheme.primary
                               : Colors.white.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -139,40 +138,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 65),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 'Buat Pesanan Sekarang',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             _buildOrderOptions(),
             const SizedBox(height: 20),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 'Paket Bundle',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             const SizedBox(height: 6),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 'Lebih hemat, lebih nikmat! Temukan perpaduan sempurna kopi favorit dan snack pilihan untuk menemani harimu.',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textSecondary,
-                  height: 1.4,
-                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      height: 1.4,
+                    ),
               ),
             ),
             const SizedBox(height: 14),
@@ -183,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.black.withOpacity(0.08),
+                      color: Colors.black.withOpacity(0.08),
                       blurRadius: 15,
                       offset: const Offset(0, 5),
                     ),
@@ -215,11 +208,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -244,29 +237,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text('150 Pts', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                      Text('Member', style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                    children: [
+                      const Text(
+                        '150 Pts',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      Text(
+                        'Member',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 11,
+                            ),
+                      ),
                     ],
                   ),
                 ],
               ),
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+              Icon(
+                Icons.chevron_right,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                size: 20,
+              ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Divider(height: 1, color: AppColors.lightGray),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Divider(height: 1, color: Theme.of(context).dividerColor),
           ),
           Row(
-            children: const [
-              Icon(Icons.card_giftcard, size: 14, color: AppColors.primary),
-              SizedBox(width: 8),
+            children: [
+              Icon(
+                Icons.card_giftcard,
+                size: 14,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Tukarkan poin dengan hadiah menarik',
                   style: TextStyle(
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -288,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildOptionCard(
               icon: Icons.restaurant,
               title: 'Dine In',
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
               type: 'dinein',
             ),
           ),
@@ -297,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildOptionCard(
               icon: Icons.shopping_bag,
               title: 'Take Away',
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
               type: 'takeaway',
             ),
           ),
@@ -306,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildOptionCard(
               icon: Icons.delivery_dining,
               title: 'Delivery',
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
               type: 'delivery',
             ),
           ),
@@ -329,11 +338,11 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 46,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -348,11 +357,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Flexible(
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: AppColors.textPrimary,
-                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

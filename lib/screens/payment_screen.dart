@@ -126,7 +126,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Payment'),
         leading: IconButton(
@@ -179,12 +179,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: _selectedPaymentMethod == method['id']
                           ? AppColors.primary
-                          : AppColors.lightGray,
+                          : Theme.of(context).dividerColor,
                       width: _selectedPaymentMethod == method['id'] ? 2 : 1,
                     ),
                   ),
@@ -195,7 +195,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         decoration: BoxDecoration(
                           color: _selectedPaymentMethod == method['id']
                               ? AppColors.primary.withOpacity(0.1)
-                              : AppColors.lightGray,
+                              : Theme.of(context).dividerColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(

@@ -210,7 +210,7 @@ class _AdminMenuFormScreenState extends State<AdminMenuFormScreen> {
           borderRadius: BorderRadius.circular(14),
         ),
         filled: true,
-        fillColor: AppColors.white,
+        fillColor: Theme.of(context).cardColor,
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {

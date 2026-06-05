@@ -479,6 +479,7 @@ class DBHelper {
         total: (map['totalPrice'] as num).toDouble(),
         date: DateTime.parse(map['createdAt']),
         status: map['status'],
+        userId: map['userId'] as String?,
       ));
     }
     return orders;
@@ -522,6 +523,7 @@ class DBHelper {
         total: (map['totalPrice'] as num).toDouble(),
         date: DateTime.parse(map['createdAt']),
         status: map['status'],
+        userId: map['userId'] as String?,
       ));
     }
     return orders;

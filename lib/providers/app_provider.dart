@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import '../models/coffee.dart';
 import '../helpers/db_helper.dart';
@@ -9,15 +10,31 @@ class AppProvider extends ChangeNotifier {
   final List<CartItem> _cart = [];
   final List<Order> _orders = [];
   List<Coffee> _coffees = [];
+  ThemeMode _themeMode = ThemeMode.system;
 
   AppProvider() {
     _initialize();
   }
 
+  ThemeMode get themeMode => _themeMode;
+
   Future<void> _initialize() async {
+    await _loadTheme();
     await _loadCoffees();
     await _loadOrders();
     await _loadCart();
+  }
+
+  Future<void> _loadTheme() async {
+    _themeMode = await PrefsHelper.getTheme();
+    notifyListeners();
+  }
+
+  Future<void> toggleTheme() async {
+    _themeMode =
+        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    await PrefsHelper.setTheme(_themeMode);
+    notifyListeners();
   }
 
   Future<void> _loadCoffees() async {
@@ -66,6 +83,27 @@ class AppProvider extends ChangeNotifier {
   List<CartItem> get cart => _cart;
   List<Order> get orders => _orders; // All orders (for admin) and user orders
   List<Coffee> get coffees => _coffees;
+
+  // Mengambil daftar pesanan khusus untuk pengguna yang sedang login
+  Future<List<Order>> getUserOrders() async {
+    final userData = await PrefsHelper.getUserData();
+    final email = userData['userEmail'] as String? ?? '';
+    final userId = userData['userId'] as String? ?? '';
+    final finalUserId = userId.isNotEmpty ? userId : email;
+
+    if (finalUserId.isEmpty) return [];
+
+    if (kIsWeb) {
+      return _orders.where((order) => order.userId == finalUserId).toList();
+    }
+
+    try {
+      return await _dbHelper.getOrdersByUserId(finalUserId);
+    } catch (e) {
+      developer.log('Error getting user orders: $e');
+      return [];
+    }
+  }
 
   double get cartTotal {
     return _cart.fold(0, (sum, item) => sum + (item.coffee.price * item.quantity));
@@ -139,6 +177,8 @@ class AppProvider extends ChangeNotifier {
 
     final userData = await PrefsHelper.getUserData();
     final email = userData['userEmail'] as String? ?? 'guest@dincoff.com';
+    final userId = userData['userId'] as String? ?? '';
+    final finalUserId = userId.isNotEmpty ? userId : email;
 
     final order = Order(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -146,11 +186,12 @@ class AppProvider extends ChangeNotifier {
       total: cartTotal,
       date: DateTime.now(),
       status: 'Pending Payment',
+      userId: finalUserId,
     );
 
     if (!kIsWeb) {
       try {
-        await _dbHelper.insertOrder(order, email);
+        await _dbHelper.insertOrder(order, finalUserId);
       } catch (e) {
         developer.log('Error saving order to DB: $e');
       }
@@ -199,6 +240,47 @@ class AppProvider extends ChangeNotifier {
     }
     _coffees.removeWhere((c) => c.id == id);
     notifyListeners();
+  }
+
+  // Menghitung jumlah total produk kopi yang tersedia
+  Future<int> getCoffeeCount() async {
+    if (kIsWeb) {
+      return _coffees.length;
+    }
+    try {
+      return await _dbHelper.getCoffeeCount();
+    } catch (e) {
+      developer.log('Error getting coffee count: $e');
+      return _coffees.length;
+    }
+  }
+
+  // Mengambil daftar semua pengguna terdaftar
+  Future<List<Map<String, dynamic>>> getAllUsers() async {
+    if (kIsWeb) {
+      return [
+        {
+          'id': 'admin-id',
+          'username': 'Admin',
+          'email': 'admin@dincoff.com',
+          'role': 'admin',
+          'createdAt': DateTime.now().toIso8601String(),
+        },
+        {
+          'id': 'web-user-id',
+          'username': 'Web User',
+          'email': 'user@dincoff.com',
+          'role': 'user',
+          'createdAt': DateTime.now().toIso8601String(),
+        }
+      ];
+    }
+    try {
+      return await _dbHelper.getAllUsers();
+    } catch (e) {
+      developer.log('Error getting all users: $e');
+      return [];
+    }
   }
 
   // ========== LOGIN & REGISTER FUNCTIONS ==========
@@ -288,6 +370,7 @@ class AppProvider extends ChangeNotifier {
         total: oldOrder.total,
         date: oldOrder.date,
         status: 'Payment Confirmed',
+        userId: oldOrder.userId,
       );
 
       if (!kIsWeb) {
