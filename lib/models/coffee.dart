@@ -21,9 +21,28 @@ class Coffee {
 class CartItem {
   final Coffee coffee;
   int quantity;
+  String size;
+  double sweetness;
 
-  CartItem({required this.coffee, this.quantity = 1});
+  CartItem({
+    required this.coffee,
+    this.quantity = 1,
+    this.size = 'M',
+    this.sweetness = 0.5,
+  });
+
+  double get adjustedPrice {
+    double extra = 0.0;
+    if (size == 'S') {
+      extra = -3000.0;
+    } else if (size == 'L') {
+      extra = 5000.0;
+    }
+    double finalPrice = coffee.price + extra;
+    return finalPrice < 0.0 ? 0.0 : finalPrice;
+  }
 }
+
 
 class Order {
   final String id;

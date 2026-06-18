@@ -69,7 +69,7 @@ class DBHelper {
 
     final db = await openDatabase(
       dbPath,
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
         developer.log('🔨 Creating new database schema...');
         await db.execute('''
@@ -101,6 +101,8 @@ class DBHelper {
             id TEXT PRIMARY KEY,
             coffeeId TEXT,
             quantity INTEGER,
+            size TEXT,
+            sweetness REAL,
             addedAt TEXT,
             FOREIGN KEY(coffeeId) REFERENCES coffees(id)
           )
@@ -134,6 +136,15 @@ class DBHelper {
             developer.log('✅ Added items column to orders table');
           } catch (e) {
             developer.log('❌ Error adding items column: $e');
+          }
+        }
+        if (oldVersion < 4) {
+          try {
+            await db.execute('ALTER TABLE cartItems ADD COLUMN size TEXT DEFAULT "M"');
+            await db.execute('ALTER TABLE cartItems ADD COLUMN sweetness REAL DEFAULT 0.5');
+            developer.log('✅ Added size and sweetness columns to cartItems table');
+          } catch (e) {
+            developer.log('❌ Error adding size/sweetness columns: $e');
           }
         }
       },
@@ -391,6 +402,8 @@ class DBHelper {
         'coffeeImagePath': item.coffee.imagePath,
         'coffeeRating': item.coffee.rating,
         'quantity': item.quantity,
+        'size': item.size,
+        'sweetness': item.sweetness,
       };
     }).toList();
 
@@ -432,6 +445,8 @@ class DBHelper {
               rating: (itemMap['coffeeRating'] as num?)?.toDouble() ?? 0.0,
             ),
             quantity: itemMap['quantity'] ?? 1,
+            size: itemMap['size'] ?? 'M',
+            sweetness: (itemMap['sweetness'] as num?)?.toDouble() ?? 0.5,
           );
         }).toList();
       }
@@ -477,6 +492,8 @@ class DBHelper {
               rating: (itemMap['coffeeRating'] as num?)?.toDouble() ?? 0.0,
             ),
             quantity: itemMap['quantity'] ?? 1,
+            size: itemMap['size'] ?? 'M',
+            sweetness: (itemMap['sweetness'] as num?)?.toDouble() ?? 0.5,
           );
         }).toList();
       }
@@ -505,12 +522,15 @@ class DBHelper {
     );
   }
 
-  Future<int> insertOrUpdateCartItem(String coffeeId, int quantity) async {
+  Future<int> insertOrUpdateCartItem(String coffeeId, int quantity, String size, double sweetness) async {
     final db = await database;
+    final id = "${coffeeId}_${size}_${(sweetness * 100).round()}";
     return await db.insert('cartItems', {
-      'id': coffeeId,
+      'id': id,
       'coffeeId': coffeeId,
       'quantity': quantity,
+      'size': size,
+      'sweetness': sweetness,
       'addedAt': DateTime.now().toIso8601String(),
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -524,18 +544,24 @@ class DBHelper {
       final coffeeId = map['coffeeId'] as String;
       final coffee = await getCoffeeById(coffeeId);
       if (coffee != null) {
-        items.add(CartItem(coffee: coffee, quantity: map['quantity'] as int));
+        items.add(CartItem(
+          coffee: coffee,
+          quantity: map['quantity'] as int,
+          size: map['size'] as String? ?? 'M',
+          sweetness: (map['sweetness'] as num?)?.toDouble() ?? 0.5,
+        ));
       }
     }
     return items;
   }
 
-  Future<int> deleteCartItem(String coffeeId) async {
+  Future<int> deleteCartItem(String coffeeId, String size, double sweetness) async {
     final db = await database;
+    final id = "${coffeeId}_${size}_${(sweetness * 100).round()}";
     return await db.delete(
       'cartItems',
-      where: 'coffeeId = ?',
-      whereArgs: [coffeeId],
+      where: 'id = ?',
+      whereArgs: [id],
     );
   }
 

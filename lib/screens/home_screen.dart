@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'menu_screen.dart';
 import '../widgets/floating_cart.dart';
+import '../widgets/liquid_loyalty_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -265,6 +266,16 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Divider(height: 1, color: Theme.of(context).dividerColor),
           ),
+          // 🌊 LiquidLoyaltyBar — Custom Drawing Widget
+          // Progress bar berbentuk cairan bergelombang animasi
+          // menampilkan progres poin loyalitas member.
+          // Tap untuk melihat detail poin.
+          const LiquidLoyaltyBar(
+            currentPoints: 150,
+            maxPoints: 200,
+            height: 32,
+          ),
+          const SizedBox(height: 8),
           Row(
             children: [
               Icon(

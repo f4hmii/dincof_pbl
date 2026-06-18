@@ -7,6 +7,7 @@ import 'detail_screen.dart';
 import '../helpers/currency_helper.dart';
 import '../widgets/floating_cart.dart';
 import '../widgets/coffee_image_widget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MenuScreen extends StatelessWidget {
   final String orderType;
@@ -168,7 +169,9 @@ class MenuScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, provider, child) {
         final coffees = provider.coffees;
-        if (coffees.isEmpty) return const SizedBox.shrink();
+        if (coffees.isEmpty) {
+          return _buildShimmerLoader(context, isHorizontal: true);
+        }
 
         return SizedBox(
           height: 230,
@@ -190,6 +193,10 @@ class MenuScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, provider, child) {
         final coffees = provider.coffees;
+        if (coffees.isEmpty) {
+          return _buildShimmerLoader(context, isHorizontal: false);
+        }
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
           child: GridView.builder(
@@ -213,6 +220,67 @@ class MenuScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildShimmerLoader(BuildContext context, {required bool isHorizontal}) {
+    final baseColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey[800]!
+        : Colors.grey[300]!;
+    final highlightColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey[700]!
+        : Colors.grey[100]!;
+
+    if (isHorizontal) {
+      return SizedBox(
+        height: 230,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              child: Container(
+                width: 160,
+                margin: const EdgeInsets.only(right: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.7,
+          ),
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
 
   Widget _buildCoffeeCard(
@@ -291,11 +359,15 @@ class MenuScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        formatRupiah(coffee.price),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          formatRupiah(coffee.price),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       GestureDetector(
@@ -334,6 +406,14 @@ class MenuScreen extends StatelessWidget {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
+            double getAdjustedPrice(String size) {
+              double extra = 0.0;
+              if (size == 'S') extra = -3000.0;
+              if (size == 'L') extra = 5000.0;
+              double finalPrice = coffee.price + extra;
+              return finalPrice < 0.0 ? 0.0 : finalPrice;
+            }
+
             return Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -444,7 +524,7 @@ class MenuScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            formatRupiah(coffee.price),
+                            formatRupiah(getAdjustedPrice(selectedSize)),
                             style: const TextStyle(
                               color: AppColors.primary,
                               fontSize: 20,
@@ -459,7 +539,11 @@ class MenuScreen extends StatelessWidget {
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () {
-                              context.read<AppProvider>().addToCart(coffee);
+                              context.read<AppProvider>().addToCart(
+                                    coffee,
+                                    size: selectedSize,
+                                    sweetness: 0.5,
+                                  );
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

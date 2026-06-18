@@ -4,6 +4,8 @@ import '../theme/colors.dart';
 import '../models/coffee.dart';
 import '../providers/app_provider.dart';
 import '../helpers/currency_helper.dart';
+import '../widgets/interactive_coffee_cup.dart';
+import '../widgets/star_rating_widget.dart';
 import '../widgets/coffee_image_widget.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -17,6 +19,18 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   String selectedSize = 'M';
+  double selectedSweetness = 0.5;
+
+  double get adjustedPrice {
+    double extra = 0.0;
+    if (selectedSize == 'S') {
+      extra = -3000.0;
+    } else if (selectedSize == 'L') {
+      extra = 5000.0;
+    }
+    double finalPrice = widget.coffee.price + extra;
+    return finalPrice < 0.0 ? 0.0 : finalPrice;
+  }
 
   LinearGradient getCoffeeGradient(String coffeeName) {
     switch (coffeeName.toLowerCase()) {
@@ -115,8 +129,26 @@ class _DetailScreenState extends State<DetailScreen> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 20),
-                        const SizedBox(width: 4),
+                        // ★ StarRatingWidget — Custom Drawing Widget
+                        // Menggambar bintang secara manual dengan CustomPainter,
+                        // mendukung bintang sebagian dan gesture interaktif.
+                        StarRatingWidget(
+                          rating: widget.coffee.rating,
+                          starCount: 5,
+                          size: 22,
+                          interactive: true,
+                          onRatingChanged: (newRating) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Rating Anda: $newRating ⭐'),
+                                backgroundColor: AppColors.primary,
+                                duration: const Duration(seconds: 1),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
                         Text(
                           widget.coffee.rating.toString(),
                           style: const TextStyle(
@@ -150,6 +182,36 @@ class _DetailScreenState extends State<DetailScreen> {
                         color: AppColors.textSecondary,
                         height: 1.5,
                       ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Custom Order',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    InteractiveCoffeeCup(
+                      coffeeName: widget.coffee.name,
+                      volume: selectedSize == 'S' ? 0.35 : (selectedSize == 'M' ? 0.65 : 0.95),
+                      sweetness: selectedSweetness,
+                      onVolumeChanged: (vol) {
+                        setState(() {
+                          if (vol < 0.5) {
+                            selectedSize = 'S';
+                          } else if (vol < 0.8) {
+                            selectedSize = 'M';
+                          } else {
+                            selectedSize = 'L';
+                          }
+                        });
+                      },
+                      onSweetnessChanged: (sweet) {
+                        setState(() {
+                          selectedSweetness = sweet;
+                        });
+                      },
                     ),
                     const SizedBox(height: 24),
                     const Text(
@@ -239,7 +301,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        formatRupiah(widget.coffee.price),
+                        formatRupiah(adjustedPrice),
                         style: const TextStyle(
                           color: AppColors.primary,
                           fontSize: 24,
@@ -248,16 +310,21 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: 217,
-                    height: 62,
-                    child: ElevatedButton(
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: SizedBox(
+                      height: 62,
+                      child: ElevatedButton(
                       onPressed: () {
-                        context.read<AppProvider>().addToCart(widget.coffee);
+                        context.read<AppProvider>().addToCart(
+                          widget.coffee,
+                          size: selectedSize,
+                          sweetness: selectedSweetness,
+                        );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '${widget.coffee.name} added to cart!',
+                              '${widget.coffee.name} ($selectedSize, Kemanisan ${(selectedSweetness * 100).round()}%) added to cart!',
                             ),
                             backgroundColor: AppColors.primary,
                             duration: const Duration(seconds: 2),
@@ -280,6 +347,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ),
                       ),
                     ),
+                  ),
                   ),
                 ],
               ),

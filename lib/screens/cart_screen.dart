@@ -7,6 +7,7 @@ import 'checkout_screen.dart';
 import 'login_screen.dart';
 import '../helpers/currency_helper.dart';
 import '../widgets/coffee_image_widget.dart';
+import '../widgets/empty_cart_widget.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -19,10 +20,43 @@ class CartScreen extends StatelessWidget {
       body: Consumer<AppProvider>(
         builder: (context, provider, child) {
           if (provider.cart.isEmpty) {
-            return const Center(
-              child: Text(
-                'Your cart is empty',
-                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 🛒 EmptyCartWidget — Custom Drawing Widget
+                  // Menggambar keranjang belanja kopi kosong secara
+                  // manual dengan CustomPainter. Animasi: floating,
+                  // uap kopi bergerak, bintang berkelip.
+                  // Gesture: tap untuk efek goyang (shake).
+                  const EmptyCartWidget(size: 160),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Keranjang belanja Anda kosong',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Silakan pilih kopi favorit Anda dari menu.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    '(Ketuk keranjang untuk animasi)',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: AppColors.textSecondary,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ),
             );
           }
@@ -82,7 +116,7 @@ class CartScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  item.coffee.type,
+                                  '${item.coffee.type} (${item.size}, Gula: ${(item.sweetness * 100).round()}%)',
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.textSecondary,
@@ -90,7 +124,7 @@ class CartScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  formatRupiah(item.coffee.price),
+                                  formatRupiah(item.adjustedPrice),
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

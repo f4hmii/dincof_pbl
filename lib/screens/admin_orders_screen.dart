@@ -130,9 +130,11 @@ class AdminOrdersScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('${item.quantity}x ${item.coffee.name}'),
                               Text(
-                                formatRupiah(item.coffee.price * item.quantity),
+                                '${item.quantity}x ${item.coffee.name} (${item.size}, Gula: ${(item.sweetness * 100).round()}%)',
+                              ),
+                              Text(
+                                formatRupiah(item.adjustedPrice * item.quantity),
                               ),
                             ],
                           ),

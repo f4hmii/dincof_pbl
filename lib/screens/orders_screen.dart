@@ -112,10 +112,14 @@ class OrdersScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Expanded(child: Text(item.coffee.name)),
+                                Expanded(
+                                  child: Text(
+                                    '${item.coffee.name} (${item.size}, Gula: ${(item.sweetness * 100).round()}%)',
+                                  ),
+                                ),
                                 Text(
                                   formatRupiah(
-                                    item.coffee.price * item.quantity,
+                                    item.adjustedPrice * item.quantity,
                                   ),
                                 ),
                               ],

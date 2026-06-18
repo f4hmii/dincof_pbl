@@ -3,6 +3,7 @@ import '../theme/colors.dart';
 import 'admin_menu_screen.dart';
 import 'admin_orders_screen.dart';
 import 'admin_users_screen.dart';
+import 'admin_sales_chart_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -67,6 +68,21 @@ class AdminDashboard extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AdminUsersScreen(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            _buildAdminCard(
+              context,
+              title: 'Sales Report & Chart',
+              icon: Icons.bar_chart,
+              color: Colors.orange,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AdminSalesChartScreen(),
                   ),
                 );
               },

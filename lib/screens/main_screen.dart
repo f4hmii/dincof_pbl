@@ -43,26 +43,30 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 8.0,
-            ),
+          child: SizedBox(
+            height: 60,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(Icons.home_filled, Icons.home_outlined, 0),
-                _buildNavItem(
-                  Icons.receipt_long,
-                  Icons.receipt_long_outlined,
-                  1,
+                Expanded(
+                  child: _buildNavItem(Icons.home_filled, Icons.home_outlined, 0),
                 ),
-                _buildNavItem(
-                  Icons.shopping_bag,
-                  Icons.shopping_bag_outlined,
-                  2,
+                Expanded(
+                  child: _buildNavItem(
+                    Icons.receipt_long,
+                    Icons.receipt_long_outlined,
+                    1,
+                  ),
                 ),
-                _buildNavItem(Icons.person, Icons.person_outline, 3),
+                Expanded(
+                  child: _buildNavItem(
+                    Icons.shopping_bag,
+                    Icons.shopping_bag_outlined,
+                    2,
+                  ),
+                ),
+                Expanded(
+                  child: _buildNavItem(Icons.person, Icons.person_outline, 3),
+                ),
               ],
             ),
           ),
@@ -76,20 +80,22 @@ class _MainScreenState extends State<MainScreen> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Icon(
-          isSelected ? activeIcon : inactiveIcon,
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).textTheme.bodySmall?.color,
-          size: 28,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            isSelected ? activeIcon : inactiveIcon,
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).textTheme.bodySmall?.color,
+            size: 24,
+          ),
         ),
       ),
     );

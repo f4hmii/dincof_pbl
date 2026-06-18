@@ -4,6 +4,8 @@ import '../theme/colors.dart';
 import '../providers/app_provider.dart';
 import '../helpers/prefs_helper.dart';
 import '../helpers/currency_helper.dart';
+import '../widgets/coffee_bean_loading.dart';
+import 'package:lottie/lottie.dart';
 
 class PaymentScreen extends StatefulWidget {
   final double totalAmount;
@@ -76,10 +78,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Icon(
-          Icons.check_circle,
-          color: Color(0xFF3B82F6),
-          size: 56,
+        title: Center(
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Lottie.network(
+              'https://raw.githubusercontent.com/abuanwar072/Flutter-Lottie-Animation/master/assets/success.json',
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  Icons.check_circle,
+                  color: Color(0xFF3B82F6),
+                  size: 72,
+                );
+              },
+            ),
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -342,14 +355,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   disabledBackgroundColor: AppColors.lightGray,
                 ),
                 child: _isProcessing
-                    ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.white,
-                          ),
-                        ),
+                    // ☕ CoffeeBeanLoadingWidget — Custom Drawing Widget
+                    // Menggambar 3 biji kopi berputar dalam orbit melingkar
+                    // sebagai pengganti CircularProgressIndicator biasa.
+                    ? const CoffeeBeanLoadingWidget(
+                        size: 32,
+                        color: AppColors.white,
                       )
                     : const Text(
                         'Process Payment',

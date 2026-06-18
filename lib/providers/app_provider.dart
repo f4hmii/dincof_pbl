@@ -109,24 +109,38 @@ class AppProvider extends ChangeNotifier {
   double get cartTotal {
     return _cart.fold(
       0,
-      (sum, item) => sum + (item.coffee.price * item.quantity),
+      (sum, item) => sum + (item.adjustedPrice * item.quantity),
     );
   }
 
-  Future<void> addToCart(Coffee coffee) async {
-    final index = _cart.indexWhere((item) => item.coffee.id == coffee.id);
+  Future<void> addToCart(
+    Coffee coffee, {
+    String size = 'M',
+    double sweetness = 0.5,
+  }) async {
+    final index = _cart.indexWhere(
+      (item) =>
+          item.coffee.id == coffee.id &&
+          item.size == size &&
+          item.sweetness == sweetness,
+    );
     int newQuantity = 1;
     if (index != -1) {
       _cart[index].quantity++;
       newQuantity = _cart[index].quantity;
     } else {
-      _cart.add(CartItem(coffee: coffee));
+      _cart.add(CartItem(coffee: coffee, size: size, sweetness: sweetness));
     }
     notifyListeners();
 
     if (!kIsWeb) {
       try {
-        await _dbHelper.insertOrUpdateCartItem(coffee.id, newQuantity);
+        await _dbHelper.insertOrUpdateCartItem(
+          coffee.id,
+          newQuantity,
+          size,
+          sweetness,
+        );
       } catch (e) {
         developer.log('Error adding item to DB cart: $e');
       }
@@ -139,7 +153,7 @@ class AppProvider extends ChangeNotifier {
 
     if (!kIsWeb) {
       try {
-        await _dbHelper.deleteCartItem(item.coffee.id);
+        await _dbHelper.deleteCartItem(item.coffee.id, item.size, item.sweetness);
       } catch (e) {
         developer.log('Error removing item from DB cart: $e');
       }
@@ -153,7 +167,12 @@ class AppProvider extends ChangeNotifier {
 
       if (!kIsWeb) {
         try {
-          await _dbHelper.insertOrUpdateCartItem(item.coffee.id, newQuantity);
+          await _dbHelper.insertOrUpdateCartItem(
+            item.coffee.id,
+            newQuantity,
+            item.size,
+            item.sweetness,
+          );
         } catch (e) {
           developer.log('Error updating quantity in DB cart: $e');
         }
