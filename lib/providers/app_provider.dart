@@ -25,6 +25,7 @@ class AppProvider extends ChangeNotifier {
     await _loadCart();
   }
 
+  // --- MULAI BAGIAN RIZKY: State Management untuk Tema ---
   Future<void> _loadTheme() async {
     _themeMode = await PrefsHelper.getTheme();
     notifyListeners();
@@ -37,6 +38,7 @@ class AppProvider extends ChangeNotifier {
     await PrefsHelper.setTheme(_themeMode);
     notifyListeners();
   }
+  // --- AKHIR BAGIAN RIZKY: State Management untuk Tema ---
 
   Future<void> _loadCoffees() async {
     if (kIsWeb) {
@@ -106,12 +108,14 @@ class AppProvider extends ChangeNotifier {
     }
   }
 
+  // --- MULAI BAGIAN RIZKY: Logika Transaksi (Total Keranjang) ---
   double get cartTotal {
     return _cart.fold(
       0,
       (sum, item) => sum + (item.adjustedPrice * item.quantity),
     );
   }
+  // --- AKHIR BAGIAN RIZKY: Logika Transaksi (Total Keranjang) ---
 
   Future<void> addToCart(
     Coffee coffee, {
@@ -224,6 +228,7 @@ class AppProvider extends ChangeNotifier {
     await clearCart();
   }
 
+  // --- MULAI BAGIAN RIZKY: State Management untuk Tambah Kopi ---
   Future<void> addCoffee(Coffee coffee) async {
     if (!kIsWeb) {
       try {
@@ -235,7 +240,9 @@ class AppProvider extends ChangeNotifier {
     _coffees.add(coffee);
     notifyListeners();
   }
+  // --- AKHIR BAGIAN RIZKY: State Management untuk Tambah Kopi ---
 
+  // --- MULAI BAGIAN NANDA: State Management untuk Update, Delete, dan Hitung Kopi ---
   Future<void> updateCoffee(Coffee updatedCoffee) async {
     if (!kIsWeb) {
       try {
@@ -274,7 +281,9 @@ class AppProvider extends ChangeNotifier {
       return _coffees.length;
     }
   }
+  // --- AKHIR BAGIAN NANDA: State Management untuk Update, Delete, dan Hitung Kopi ---
 
+  // --- MULAI BAGIAN ZULFAHMI: State Management (Provider) untuk Logika Login, Register, & Ambil User ---
   Future<List<Map<String, dynamic>>> getAllUsers() async {
     if (kIsWeb) {
       return [
@@ -374,6 +383,7 @@ class AppProvider extends ChangeNotifier {
       return null;
     }
   }
+  // --- AKHIR BAGIAN ZULFAHMI: State Management (Provider) untuk Logika Login, Register, & Ambil User ---
 
   Future<void> confirmOrderPayment(String orderId) async {
     final index = _orders.indexWhere((o) => o.id == orderId);

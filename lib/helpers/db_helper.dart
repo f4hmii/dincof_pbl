@@ -157,6 +157,7 @@ class DBHelper {
     return db;
   }
 
+  // --- MULAI BAGIAN RIZKY: Implementasi Database (SQLite) untuk Tambah & Ambil Data Kopi ---
   Future<int> insertCoffee(Coffee coffee) async {
     final db = await database;
     return await db.insert('coffees', {
@@ -206,7 +207,9 @@ class DBHelper {
     }
     return null;
   }
+  // --- AKHIR BAGIAN RIZKY: Implementasi Database (SQLite) untuk Tambah & Ambil Data Kopi ---
 
+  // --- MULAI BAGIAN NANDA: Implementasi Database (SQLite) untuk Update, Delete, & Count Data Kopi ---
   Future<int> updateCoffee(Coffee coffee) async {
     final db = await database;
     return await db.update(
@@ -234,6 +237,7 @@ class DBHelper {
     final result = await db.rawQuery('SELECT COUNT(*) FROM coffees');
     return Sqflite.firstIntValue(result) ?? 0;
   }
+  // --- AKHIR BAGIAN NANDA: Implementasi Database (SQLite) untuk Update, Delete, & Count Data Kopi ---
 
   Future<List<Coffee>> getCoffeesByType(String type) async {
     final db = await database;
@@ -352,6 +356,7 @@ class DBHelper {
     }, conflictAlgorithm: ConflictAlgorithm.ignore);
   }
 
+  // --- MULAI BAGIAN ZULFAHMI: Implementasi Database (SQLite) untuk Autentikasi & Data Pengguna ---
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     final db = await database;
     final result = await db.query(
@@ -378,6 +383,7 @@ class DBHelper {
     final db = await database;
     return await db.query('users');
   }
+  // --- AKHIR BAGIAN ZULFAHMI: Implementasi Database (SQLite) untuk Autentikasi & Data Pengguna ---
 
   Future<int> deleteUser(String id) async {
     final db = await database;
